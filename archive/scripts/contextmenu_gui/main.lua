@@ -567,53 +567,53 @@ local menuList = {}
 menuList = {
     file_loaded_menu = false,
 
--- 一级菜单（未导入文件时）
+-- Primary menu (when no file is loaded)
     context_menu = {
-        {CASCADE, "加载", "open_menu", "", "", false},
+        {CASCADE, "Load", "open_menu", "", "", false},
         {SEP},
-        {CASCADE, "画面", "output_menu", "", "", false},
+        {CASCADE, "Output", "output_menu", "", "", false},
         {SEP},
-        {CASCADE, "其它", "etc_menu", "", "", false},
+        {CASCADE, "Other", "etc_menu", "", "", false},
         {SEP},
-        {CASCADE, "关于", "about_menu", "", "", false},
-        {COMMAND, "退出 mpv", "q", "quit", "", false},
+        {CASCADE, "About", "about_menu", "", "", false},
+        {COMMAND, "Quit mpv", "q", "quit", "", false},
     },
 
--- 二级菜单 —— 加载
+-- Secondary menu — Load
     open_menu = {
-        {COMMAND, "[外置脚本] 文件", "CTRL+o", "script-message-to open_dialog import_files", "", false},
-        {COMMAND, "[外置脚本] 地址", "CTRL+O", "script-message-to open_dialog import_url", "", false},
-        {COMMAND, "[外置脚本] 内置文件浏览器", "Tab", "script-message-to file_browser browse-files;script-message-to file_browser dynamic/reload;show-text ''", "", false},
-        {COMMAND, "[外置脚本] 加载最后播放文件", "CTRL+l", "script-binding simplehistory/history-load-last", "", false},
-        {COMMAND, "[外置脚本] 加载最后播放文件及进度", "CTRL+L", "script-binding simplehistory/history-resume", "", false},
-        {COMMAND, "[外置脚本] 开/关 隐身历史", "ALT+l", "script-binding simplehistory/history-incognito-mode", "", false},
-        {COMMAND, "[外置脚本] 打开  历史菜单", "`", "script-binding simplehistory/open-list;show-text ''", "", false},
-        {COMMAND, "[外置脚本] 打开  书签菜单", "N", "script-binding simplebookmark/open-list;show-text ''", "", false},
-        {COMMAND, "[外部脚本] 打开  剪贴菜单", "ALT+w", "script-binding smartcopypaste_II/open-list;show-text ''", "", false},
+        {COMMAND, "[External Script] File", "CTRL+o", "script-message-to open_dialog import_files", "", false},
+        {COMMAND, "[External Script] URL", "CTRL+O", "script-message-to open_dialog import_url", "", false},
+        {COMMAND, "[External Script] Internal File Browser", "Tab", "script-message-to file_browser browse-files;script-message-to file_browser dynamic/reload;show-text ''", "", false},
+        {COMMAND, "[External Script] Load Last Played File", "CTRL+l", "script-binding simplehistory/history-load-last", "", false},
+        {COMMAND, "[External Script] Load Last Played File and Position", "CTRL+L", "script-binding simplehistory/history-resume", "", false},
+        {COMMAND, "[External Script] Toggle Incognito History", "ALT+l", "script-binding simplehistory/history-incognito-mode", "", false},
+        {COMMAND, "[External Script] Open History Menu", "`", "script-binding simplehistory/open-list;show-text ''", "", false},
+        {COMMAND, "[External Script] Open Bookmark Menu", "N", "script-binding simplebookmark/open-list;show-text ''", "", false},
+        {COMMAND, "[External Script] Open Clipboard Menu", "ALT+w", "script-binding smartcopypaste_II/open-list;show-text ''", "", false},
     },
 
--- 二级菜单 —— 画面
+-- Secondary menu — Output
     output_menu = {
-        {CHECK, "窗口置顶", "ALT+t", "cycle ontop", function() return propNative("ontop") end, false},
-        {CHECK, "窗口边框", "CTRL+B", "cycle border", function() return propNative("border") end, false},
-        {CHECK, "全屏", "ENTER", "cycle fullscreen", function() return propNative("fullscreen") end, false},
+        {CHECK, "Window Topmost", "ALT+t", "cycle ontop", function() return propNative("ontop") end, false},
+        {CHECK, "Window Border", "CTRL+B", "cycle border", function() return propNative("border") end, false},
+        {CHECK, "Fullscreen", "ENTER", "cycle fullscreen", function() return propNative("fullscreen") end, false},
     },
 
--- 二级菜单 —— 其它
+-- Secondary menu — Other
     etc_menu = {
-        {COMMAND, "[内部脚本] 控制台", "~", "script-binding console/enable", "", false},
-        {COMMAND, "[外置脚本] OSD高级音频设备菜单", "F6", "script-message-to adevice_list toggle-adevice-browser;show-text ''", "", false},
-        {COMMAND, "[外部脚本] 更新  脚本着色器", "M", "script-message manager-update-all;show-text 更新脚本着色器", "", false},
+        {COMMAND, "[Internal Script] Console", "~", "script-binding console/enable", "", false},
+        {COMMAND, "[External Script] OSD Advanced Audio Device Menu", "F6", "script-message-to adevice_list toggle-adevice-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Update Script Shaders", "M", "script-message manager-update-all;show-text Update Script Shaders", "", false},
     },
 
--- 二级菜单 —— 关于
+-- Secondary menu — About
     about_menu = {
         {COMMAND, mp.get_property("mpv-version"), "", "", "", false},
         {COMMAND, "ffmpeg " .. mp.get_property("ffmpeg-version"), "", "", "", false},
         {COMMAND, "libass " .. mp.get_property("libass-version"), "", "", "", false},
     },
-
 }
+
 
 -- If mpv enters a stopped state, change the change the menu back to the "no file loaded" menu
 -- so that it will still popup.
@@ -628,462 +628,449 @@ local function playmenuList()
     menuList = {
         file_loaded_menu = true,
 
--- 一级菜单（已导入文件后）
-        context_menu = {
-            {CASCADE, "加载", "open_menu", "", "", false},
-            {SEP},
-            {CASCADE, "文件", "file_menu", "", "", false},
-            {CASCADE, "导航", "navi_menu", "", "", false},
-            {CASCADE, "画面", "output_menu", "", "", false},
-            {CASCADE, "视频", "video_menu", "", "", false},
-            {CASCADE, "音频", "audio_menu", "", "", false},
-            {CASCADE, "字幕", "subtitle_menu", "", "", false},
-            {SEP},
-            {CASCADE, "滤镜", "filter_menu", "", "", false},
-            {CASCADE, "着色器", "shader_menu", "", "", false},
-            {CASCADE, "配置组", "profile_menu", "", "", false},
-            {CASCADE, "其它", "etc_menu", "", "", false},
-            {CASCADE, "工具", "tool_menu", "", "", false},
-            {SEP},
-            {CASCADE, "关于", "about_menu", "", "", false},
-            {COMMAND, "最小化", "b", "cycle window-minimized", "", false},
-            {COMMAND, "退出 mpv", "q", "quit", "", false},
-            {COMMAND, "退出并保存当前文件状态", "Q", "quit-watch-later", "", false},
+-- Primary menu (after file is loaded)
+    context_menu = {
+        {CASCADE, "Load", "open_menu", "", "", false},
+        {SEP},
+        {CASCADE, "File", "file_menu", "", "", false},
+        {CASCADE, "Navigation", "navi_menu", "", "", false},
+        {CASCADE, "Output", "output_menu", "", "", false},
+        {CASCADE, "Video", "video_menu", "", "", false},
+        {CASCADE, "Audio", "audio_menu", "", "", false},
+        {CASCADE, "Subtitle", "subtitle_menu", "", "", false},
+        {SEP},
+        {CASCADE, "Filter", "filter_menu", "", "", false},
+        {CASCADE, "Shader", "shader_menu", "", "", false},
+        {CASCADE, "Profile", "profile_menu", "", "", false},
+        {CASCADE, "Other", "etc_menu", "", "", false},
+        {CASCADE, "Tools", "tool_menu", "", "", false},
+        {SEP},
+        {CASCADE, "About", "about_menu", "", "", false},
+        {COMMAND, "Minimize", "b", "cycle window-minimized", "", false},
+        {COMMAND, "Quit mpv", "q", "quit", "", false},
+        {COMMAND, "Quit and Save Current File State", "Q", "quit-watch-later", "", false},
+    },
+
+-- Secondary menu — Load
+    open_menu = {
+        {COMMAND, "[External Script] File", "CTRL+o", "script-message-to open_dialog import_files", "", false},
+        {COMMAND, "[External Script] URL", "CTRL+O", "script-message-to open_dialog import_url", "", false},
+        {CASCADE, "[External Script] Bookmarks", "bookmarker_menu", "", "", false},
+        {CASCADE, "[External Script] Clipboard", "copy_menu", "", "", false},
+        {CASCADE, "[External Script] Chapter Creation", "chaptercreat_menu", "", "", false},
+        {COMMAND, "[External Script] Internal File Browser", "Tab", "script-message-to file_browser browse-files;script-message-to file_browser dynamic/reload;show-text ''", "", false},
+        {COMMAND, "[External Script] Toggle Incognito History", "ALT+l", "script-binding simplehistory/history-incognito-mode", "", false},
+        {COMMAND, "[External Script] Open History Menu", "`", "script-binding simplehistory/open-list;show-text ''", "", false},
+        {SEP},
+        {COMMAND, "[External Script] Load Other Subtitles (Switch)", "ALT+e", "script-message-to open_dialog append_sid", "", false},
+        {COMMAND, "[External Script] Load Other Audio Tracks (No Switch)", "ALT+E", "script-message-to open_dialog append_aid", "", false},
+        {COMMAND, "[External Script] Load Secondary Subtitles (Filter Type)", "CTRL+e", "script-message-to open_dialog append_vfSub", "", false},
+        {COMMAND, "[External Script] Toggle Secondary Subtitles Visibility", "CTRL+E", "script-message-to open_dialog toggle_vfSub", "", false},
+        {COMMAND, "[External Script] Remove Secondary Subtitles", "CTRL+ALT+e", "script-message-to open_dialog remove_vfSub", "", false},
+    },
+
+-- Tertiary menu — Bookmarks
+    bookmarker_menu = {
+        {COMMAND, "Open Bookmark Menu", "N", "script-binding simplebookmark/open-list;show-text ''", "", false},
+        {COMMAND, "Add Progress Bookmark", "CTRL+n", "script-binding simplebookmark/bookmark-save", "", false},
+        {COMMAND, "Add File Bookmark", "ALT+n", "script-binding simplebookmark/bookmark-fileonly", "", false},
+    },
+-- Tertiary menu — Clipboard
+    copy_menu = {
+        {COMMAND, "Open Clipboard Menu", "ALT+w", "script-binding smartcopypaste_II/open-list;show-text ''", "", false},
+        {COMMAND, "Copy File Path", "CTRL+ALT+c", "script-binding smartcopypaste_II/copy-specific", "", false},
+        {COMMAND, "Copy File Path and Position", "CTRL+c", "script-binding smartcopypaste_II/copy", "", false},
+        {COMMAND, "Jump to Copied Content", "CTRL+v", "script-binding smartcopypaste_II/paste", "", false},
+        {COMMAND, "Add Copied Content to Playlist", "CTRL+ALT+v", "script-binding smartcopypaste_II/paste-specific", "", false},
+    },
+-- Tertiary menu — Chapter Creation
+    chaptercreat_menu = {
+        {COMMAND, "Mark Chapter Time", "ALT+C", "script-message create_chapter", "", false},
+        {COMMAND, "Create chp External Chapter File", "ALT+B", "script-message write_chapter", "", false},
+        {COMMAND, "Create xml External Chapter File", "CTRL+ALT+b", "script-message write_chapter_xml", "", false},
+    },
+-- Secondary menu — File
+    file_menu = {
+        {CHECK, "Play/Pause", "SPACE", "cycle pause;show-text 暂停:${pause}", function() return propNative("pause") end, false},
+        {COMMAND, "Stop", "SHIFT+F11", "stop", "", false},
+        {COMMAND, "Reset Modified Options in Playback", "R", "cycle-values reset-on-next-file all no vf,af,border,contrast,brightness,gamma,saturation,hue,video-zoom,video-rotate,video-pan-x,video-pan-y,panscan,speed,audio,sub,audio-delay,sub-pos,sub-scale,sub-delay,sub-speed,sub-visibility;show-text 播放下一个文件时重置以下选项:${reset-on-next-file}", "", false},
+        {SEP},
+        {AB, "A-B Loop", "l", "ab-loop", function() return stateABLoop() end, false},
+        {CHECK, "Loop Playback", "L", "cycle-values loop-file inf no;show-text 循环播放:${loop-file}", function() return stateFileLoop() end, false},
+        {SEP},
+        {COMMAND, "Speed -0.1", "[", "add speed -0.1;show-text 减速播放:${speed}", "", false},
+        {COMMAND, "Speed +0.1", "]", "add speed  0.1;show-text 加速播放:${speed}", "", false},
+        {COMMAND, "Half Speed", "{", "set speed 0.5;show-text 半速播放:${speed}", "", false},
+        {COMMAND, "Double Speed", "}", "set speed 2;show-text 倍速播放:${speed}", "", false},
+        {COMMAND, "Reset Speed", "BS", "set speed 1;show-text 重置播放速度:${speed}", "", false},
+        {SEP},
+        {COMMAND, "[External Script] Locate Current File", "ALT+o", "script_message-to locatefile locate-current-file", "", false},
+        {COMMAND, "[External Script] Delete Current File", "CTRL+DEL", "script-message-to delete_current_file delete-file 1 '请按1确认删除'", "", false},
+        {CASCADE, "[External Script] Youtube-dl Menu", "ytdl_menu", "", "", false},
+    },
+
+-- Tertiary menu — Youtube-dl Menu
+    ytdl_menu = {
+        {COMMAND, "Toggle ytdl Video Format Menu", "CTRL+F", "script-message-to quality_menu video_formats_toggle;show-text ''", "", false},
+        {COMMAND, "Toggle ytdl Audio Format Menu", "ALT+F", "script-message-to quality_menu audio_formats_toggle;show-text ''", "", false},
+        {COMMAND, "Reload", "CTRL+ALT+f", "script-message-to quality_menu reload", "", false},
+        {COMMAND, "Download ytdl Video", "ALT+V", "script-message-to youtube_download download-video", "", false},
+        {COMMAND, "Download ytdl Audio", "ALT+Y", "script-message-to youtube_download download-audio", "", false},
+        {COMMAND, "Download ytdl Subtitle", "ALT+Z", "script-message-to youtube_download download-subtitle", "", false},
+        {COMMAND, "Download ytdl Subtitle + Video", "CTRL+ALT+V", "script-message-to youtube_download download-embed-subtitle", "", false},
+        {COMMAND, "Select ytdl Download Segment", "ALT+R", "script-message-to youtube_download select-range-start", "", false},
+    },
+
+-- Secondary menu — Navigation
+    navi_menu = {
+        {CHECK, "Show OSD Timeline", "O", "no-osd cycle-values osd-level 3 1", function() return stateOsdLevel(3) end, false},
+        {COMMAND, "OSD Track Information", "", "show-text ${track-list} 5000", "", false},
+        {CASCADE, "OSD Interactive Menu", "advosd_menu", "", "", false},
+        {SEP},
+        {CASCADE, "Editions", "edition_menu", "", "", function() return inspectEdition() end},
+        {CASCADE, "Chapters", "chapter_menu", "", "", function() return inspectChapter() end},
+        {SEP},
+        {CHECK, "Playlist Loop", "", "cycle-values loop-playlist inf no", function() return statePlayLoop() end, false},
+        {CHECK, "Shuffle Playlist", "", "cycle shuffle", function() return propNative("shuffle") end, false},
+        {COMMAND, "Clear Playlist", "", "playlist-clear", "", false},
+        {COMMAND, "Shuffle Playlist Randomly", "", "playlist-shuffle", "", false},
+        {COMMAND, "Restore Playlist Order", "", "playlist-unshuffle", "", false},
+        {SEP},
+        {COMMAND, "Replay", "", "seek 0 absolute", "", false},
+        {COMMAND, "Previous File", "<", "playlist-prev;show-text Playlist:${playlist-pos-1}/${playlist-count}", "", false},
+        {COMMAND, "Next File", ">", "playlist-next;show-text Playlist:${playlist-pos-1}/${playlist-count}", "", false},
+        {COMMAND, "Previous Frame", ",", "frame-back-step;show-text Current Frame:${estimated-frame-number}", "", false},
+        {COMMAND, "Next Frame", ".", "frame-step;show-text Current Frame:${estimated-frame-number}", "", false},
+        {CASCADE, "Seek Forward/Backward", "seek_menu", "", "", false},
+        {SEP},
+        {CASCADE, "[External Script] Jump", "undoredo_menu", "", "", false},
+        {COMMAND, "[External Script] Automatically Skip Specified Chapters", "ALT+q", "script-message-to chapterskip chapter-skip;show-text Automatically Skip Specified Chapters", "", false},
+        {COMMAND, "[External Script] Jump to Next Silent Position", "F4", "script-message-to skiptosilence skip-to-silence;show-text Jump to Next Silent Position", "", false},
+    },
+
+-- Tertiary menu — OSD Interactive Menu
+    advosd_menu = {
+        {COMMAND, "[External Script] Playlist", "F7", "script-message-to playlistmanager showplaylist;show-text ''", "", false},
+        {COMMAND, "[External Script] Chapter List", "F8", "script-message-to chapter_list toggle-chapter-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Video Track List", "F9", "script-message-to track_menu toggle-vidtrack-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Audio Track List", "F10", "script-message-to track_menu toggle-audtrack-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Subtitle Track List", "F11", "script-message-to track_menu toggle-subtrack-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Edition List", "F12", "script-message-to editions_notification_menu toggle-edition-browser;show-text ''", "", false},
+    },
+
+-- Tertiary menu — Seek Forward/Backward
+    seek_menu = {
+        {COMMAND, "Seek Forward 05 Seconds", "LEFT", "seek 5", "", false},
+        {COMMAND, "Seek Backward 05 Seconds", "RIGHT", "seek -5", "", false},
+        {COMMAND, "Seek Forward 60 Seconds", "UP", "seek 60", "", false},
+        {COMMAND, "Seek Backward 60 Seconds", "DOWN", "seek -60", "", false},
+        {COMMAND, "Precise Seek Forward 01 Second", "SHIFT+LEFT", "seek  1 exact", "", false},
+        {COMMAND, "Precise Seek Backward 01 Second", "SHIFT+RIGHT", "seek -1 exact", "", false},
+        {COMMAND, "Precise Seek Forward 80 Seconds", "SHIFT+UP", "seek  80 exact", "", false},
+        {COMMAND, "Precise Seek Backward 80 Seconds", "SHIFT+DOWN", "seek -80 exact", "", false},
+    },
+
+-- Tertiary menu — Jump
+    undoredo_menu = {
+        {COMMAND, "Undo Jump", "CTRL+z", "script-binding undoredo/undo", "", false},
+        {COMMAND, "Redo Jump", "CTRL+r", "script-binding undoredo/redo", "", false},
+        {COMMAND, "Loop Jump", "CTRL+ALT+z", "script-binding undoredo/undoLoop", "", false},
+    },
+
+-- Secondary menu — Output
+    output_menu = {
+        {CHECK, "Window Topmost", "ALT+t", "cycle ontop;show-text Topmost:${ontop}", function() return propNative("ontop") end, false},
+        {CHECK, "Window Border", "CTRL+B", "cycle border", function() return propNative("border") end, false},
+        {CHECK, "Maximize Window", "ALT+b", "cycle window-maximized", function() return propNative("window-maximized") end, false},
+        {CHECK, "Fullscreen", "ENTER", "cycle fullscreen", function() return propNative("fullscreen") end, false},
+        {CASCADE, "Aspect Ratio", "aspect_menu", "", "", false},
+        {SEP},
+        {COMMAND, "Crop Fill (None/Max)", "ALT+p", "cycle-values panscan 0.0 1.0;show-text Video Zoom:${panscan}", "", false},
+        {COMMAND, "Rotate Left", "CTRL+LEFT", "cycle-values video-rotate 0 270 180 90;show-text Video Rotate:${video-rotate}", "", false},
+        {COMMAND, "Rotate Right", "CTRL+RIGHT", "cycle-values video-rotate 0 90 180 270;show-text Video Rotate:${video-rotate}", "", false},
+        {COMMAND, "Zoom Out", "ALT+-", "add video-zoom -0.1;show-text Zoom Out:${video-zoom}", "", false},
+        {COMMAND, "Zoom In", "ALT+=", "add video-zoom  0.1;show-text Zoom In:${video-zoom}", "", false},
+        {CASCADE, "Video Pan", "videopan_menu", "", "", false},
+        {COMMAND, "Window Shrink", "CTRL+-", "add current-window-scale -0.1;show-text Current Window Shrink:${current-window-scale}", "", false},
+        {COMMAND, "Window Enlarge", "CTRL+=", "add current-window-scale  0.1;show-text Current Window Enlarge:${current-window-scale}", "", false},
+        {COMMAND, "Reset", "ALT+BS", "set video-zoom 0;set panscan 0;set video-rotate 0;set video-pan-x 0;set video-pan-y 0;show-text Reset Video Operations", "", false},
+        {SEP},
+        {CHECK, "Auto ICC Color Calibration", "CTRL+I", "cycle icc-profile-auto;show-text ICC Auto Calibration:${icc-profile-auto}", function() return propNative("icc-profile-auto") end, false},
+        {CHECK, "Non-Linear Color Upscaling", "ALT+s", "cycle sigmoid-upscaling;show-text Non-Linear Color Upscaling:${sigmoid-upscaling}", function() return propNative("sigmoid-upscaling") end, false},
+        {COMMAND, "Toggle Gamma Correction Factor", "G", "cycle-values gamma-factor 1.1 1.2 1.0;show-text Gamma Correction Factor:${gamma-factor}", "", false},
+        {COMMAND, "Toggle HDR Mapping Curve", "h", "cycle-values tone-mapping auto mobius reinhard hable bt.2390 gamma spline bt.2446a;show-text HDR Mapping Curve:${tone-mapping}", "", false},
+        {COMMAND, "Toggle HDR Dynamic Mapping", "ALT+h", "cycle-values hdr-compute-peak yes no;show-text HDR Dynamic Mapping:${hdr-compute-peak}", "", false},
+        {COMMAND, "Toggle Color Mapping Mode", "CTRL+t", "cycle tone-mapping-mode;show-text Color Mapping Mode:${tone-mapping-mode}", "", false},
+        {COMMAND, "Toggle Color Gamut Clipping Mode", "CTRL+g", "cycle gamut-mapping-mode;show-text Color Gamut Clipping Mode:${gamut-mapping-mode}", "", false},
+    },
+
+-- Tertiary menu — Aspect Ratio
+    aspect_menu = {
+        {COMMAND, "Reset", "", "set video-aspect-override -1", "", false},
+        {RADIO, "Force 4:3", "", "set video-aspect-override 4:3", function() return stateRatio("4:3") end, false},
+        {RADIO, "Force 16:9", "", "set video-aspect-override 16:9", function() return stateRatio("16:9") end, false},
+        {RADIO, "Force 16:10", "", "set video-aspect-override 16:10", function() return stateRatio("16:10") end, false},
+        {RADIO, "Force 1.85:1", "", "set video-aspect-override 1.85:1", function() return stateRatio("1.85:1") end, false},
+        {RADIO, "Force 2.35:1", "", "set video-aspect-override 2.35:1", function() return stateRatio("2.35:1") end, false},
+    },
+
+-- Tertiary menu — Video Pan
+    videopan_menu = {
+        {COMMAND, "Reset", "", "set video-pan-x 0;set video-pan-y 0;show-text Reset Video Pan", "", false},
+        {COMMAND, "Pan Left", "ALT+LEFT", "add video-pan-x -0.1;show-text Pan Left:${video-pan-x}", "", false},
+        {COMMAND, "Pan Right", "ALT+RIGHT", "add video-pan-x  0.1;show-text Pan Right:${video-pan-x}", "", false},
+        {COMMAND, "Pan Up", "ALT+UP", "add video-pan-y -0.1;show-text Pan Up:${video-pan-y}", "", false},
+        {COMMAND, "Pan Down", "ALT+DOWN", "add video-pan-y  0.1;show-text Pan Down:${video-pan-y}", "", false},
+    },
+
+-- Secondary menu — Video
+    video_menu = {
+        {CASCADE, "Tracks", "vidtrack_menu", "", "", function() return inspectVidTrack() end},
+        {SEP},
+        {CASCADE, "Decoding Mode", "hwdec_menu", "", "", false},
+        {COMMAND, "Toggle flip Mode", "CTRL+f", "cycle d3d11-flip;show-text flip Mode:${d3d11-flip}", "", false},
+        {COMMAND, "Toggle Compatibility with x264 Old Encoding Mode", "", "cycle vd-lavc-assume-old-x264;show-text Compatibility with x264 Old Encoding Mode:${vd-lavc-assume-old-x264}", "", false},
+        {COMMAND, "Switch Frame Sync Mode", "CTRL+p", "cycle-values video-sync display-resample audio display-vdrop display-resample-vdrop;show-text Frame Sync Mode:${video-sync}", "", false},
+        {CHECK, "Jitter Compensation", "ALT+i", "cycle interpolation;show-text Jitter Compensation:${interpolation}", function() return propNative("interpolation") end, false},
+        {COMMAND, "Toggle Black Borders Removal", "C", "script-message-to dynamic_crop toggle_crop", "", false},
+        {CHECK, "Deinterlace", "d", "cycle deinterlace;show-text Deinterlace:${deinterlace}", function() return propNative("deinterlace") end, false},
+        {CHECK, "Debanding", "D", "cycle deband;show-text Debanding:${deband}", function() return propNative("deband") end, false},
+        {COMMAND, "Debanding Strength +1", "ALT+z", "add deband-iterations +1;show-text Increase Debanding Strength:${deband-iterations}", "", false},
+        {COMMAND, "Debanding Strength -1", "ALT+x", "add deband-iterations -1;show-text Decrease Debanding Strength:${deband-iterations}", "", false},
+        {SEP},
+        {CASCADE, "Color Adjustment", "color_menu", "", "", false},
+        {CASCADE, "Screenshot", "screenshot_menu", "", "", false},
+        {SEP},
+        {CASCADE, "[External Script] Clip Segments", "slicing_menu", "", "", false},
+        {CASCADE, "[External Script] Clip Animated Images", "webp_menu", "", "", false},
+    },
+
+-- Tertiary menu — Decoding Mode
+    hwdec_menu = {
+        {COMMAND, "Prefer Software Decoding", "", "set hwdec no", "", false},
+        {COMMAND, "Prefer Hardware Decoding", "", "set hwdec auto-safe", "", false},
+        {COMMAND, "Prefer Hardware Decoding (Copy)", "", "set hwdec auto-copy-safe", "", false},
+        {SEP},
+        {RADIO, "SW", "", "set hwdec no", function() return stateHwdec("no") end, false},
+        {RADIO, "nvdec", "", "set hwdec nvdec", function() return stateHwdec("nvdec") end, false},
+        {RADIO, "nvdec-copy", "", "set hwdec nvdec-copy", function() return stateHwdec("nvdec-copy") end, false},
+        {RADIO, "d3d11va", "", "set hwdec d3d11va", function() return stateHwdec("d3d11va") end, false},
+        {RADIO, "d3d11va-copy", "", "set hwdec d3d11va-copy", function() return stateHwdec("d3d11va-copy") end, false},
+        {RADIO, "dxva2", "", "set hwdec dxva2", function() return stateHwdec("dxva2") end, false},
+        {RADIO, "dxva2-copy", "", "set hwdec dxva2-copy", function() return stateHwdec("dxva2-copy") end, false},
+        {RADIO, "cuda", "", "set hwdec cuda", function() return stateHwdec("cuda") end, false},
+        {RADIO, "cuda-copy", "", "set hwdec cuda-copy", function() return stateHwdec("cuda-copy") end, false},
+    },
+
+-- Tertiary menu — Color Adjustment
+    color_menu = {
+        {COMMAND, "Reset", "CTRL+BS", "no-osd set contrast 0; no-osd set brightness 0; no-osd set gamma 0; no-osd set saturation 0; no-osd set hue 0;show-text Reset Color Adjustment", "", false},
+        {COMMAND, "Contrast -1", "1", "add contrast -1;show-text Contrast:${contrast}", "", false},
+        {COMMAND, "Contrast +1", "2", "add contrast  1;show-text Contrast:${contrast}", "", false},
+        {COMMAND, "Brightness -1", "3", "add brightness -1;show-text Brightness:${brightness}", "", false},
+        {COMMAND, "Brightness +1", "4", "add brightness  1;show-text Brightness:${brightness}", "", false},
+        {COMMAND, "Gamma -1", "5", "add gamma -1;show-text Gamma:${gamma}", "", false},
+        {COMMAND, "Gamma +1", "6", "add gamma  1;show-text Gamma:${gamma}", "", false},
+        {COMMAND, "Saturation -1", "7", "add saturation -1;show-text Saturation:${saturation}", "", false},
+        {COMMAND, "Saturation +1", "8", "add saturation  1;show-text Saturation:${saturation}", "", false},
+        {COMMAND, "Hue -1", "-", "add hue -1;show-text Hue:${hue}", "", false},
+        {COMMAND, "Hue +1", "=", "add hue  1;show-text Hue:${hue}", "", false},
+    },
+
+-- Tertiary menu — Screenshot
+    screenshot_menu = {
+        {COMMAND, "Original Size - With Subtitles - With OSD - Single Frame", "s", "screenshot subtitles", "", false},
+        {COMMAND, "Original Size - Without Subtitles - Without OSD - Single Frame", "S", "screenshot video", "", false},
+        {COMMAND, "Actual Size - With Subtitles - With OSD - Single Frame", "CTRL+s", "screenshot window", "", false},
+        {SEP},
+        {COMMAND, "Original Size - With Subtitles - With OSD - Each Frame", "", "screenshot subtitles+each-frame", "", false},
+        {COMMAND, "Original Size - Without Subtitles - Without OSD - Each Frame", "", "screenshot video+each-frame", "", false},
+        {COMMAND, "Actual Size - With Subtitles - With OSD - Each Frame", "CTRL+S", "screenshot window+each-frame", "", false},
+    },
+
+-- Tertiary menu — Clip Segments
+    slicing_menu = {
+        {COMMAND, "Specify Start/End Positions", "c", "script-message slicing_mark", "", false},
+        {COMMAND, "Toggle Cutting Audio Info", "a", "script-message slicing_audio", "", false},
+        {COMMAND, "Clear Markers", "CTRL+C", "script-message clear_slicing_mark", "", false},
+    },
+
+-- Tertiary menu — Clip Animated Images
+    webp_menu = {
+        {COMMAND, "Start Time", "w", "script-message set_webp_start", "", false},
+        {COMMAND, "End Time", "W", "script-message set_webp_end", "", false},
+        {COMMAND, "Export WebP Animation", "CTRL+w", "script-message make_webp", "", false},
+        {COMMAND, "Export WebP Animation with Subtitles", "CTRL+W", "script-message make_webp_with_subtitles", "", false},
+    },
+
+-- Secondary menu — Audio
+    audio_menu = {
+        {CASCADE, "Tracks", "audtrack_menu", "", "", function() return inspectAudTrack() end},
+        {SEP},
+        {COMMAND, "Toggle Audio Track", "y", "cycle audio;show-text Audio Track:${audio}", "", false},
+        {CHECK, "Audio Normalization", "", "cycle audio-normalize-downmix;show-text Audio Normalization:${audio-normalize-downmix}", function() return propNative("audio-normalize-downmix") end, false},
+        {CHECK, "Audio Exclusive Mode", "CTRL+y", "cycle audio-exclusive;show-text Audio Exclusive Mode:${audio-exclusive}", function() return propNative("audio-exclusive") end, false},
+        {CHECK, "Audio Sync Mode", "CTRL+Y", "cycle hr-seek-framedrop;show-text Audio Sync Mode:${hr-seek-framedrop}", function() return propNative("hr-seek-framedrop") end, false},
+        {COMMAND, "Adjust Multi-channel Audio for Each Channel", "F2", "cycle-values  af @loudnorm:lavfi=[loudnorm=I=-16:TP=-3:LRA=4] @dynaudnorm:lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5] \"\"", "", false},
+        {SEP},
+        {COMMAND, "Volume -1", "9", "add volume -1;show-text Volume:${volume}", "", false},
+        {COMMAND, "Volume +1", "0", "add volume  1;show-text Volume:${volume}", "", false},
+        {CHECK, function() return muteLabel() end, "m", "cycle mute;show-text Mute:${mute}", function() return propNative("mute") end, false},
+        {SEP},
+        {COMMAND, "Delay -0.1", "CTRL+,", "add audio-delay -0.1;show-text Audio Delay:${audio-delay}", "", false},
+        {COMMAND, "Delay +0.1", "CTRL+.", "add audio-delay +0.1;show-text Audio Preload:${audio-delay}", "", false},
+        {COMMAND, "Reset Offset", ";", "set audio-delay 0;show-text Reset Audio Delay:${audio-delay}", "", false},
+        {SEP},
+        {CASCADE, "Channel Layout", "channel_layout", "", "", false},
+        {SEP},
+        {COMMAND, "[External Script] Toggle Interactive Audio Device Menu", "F6", "script-message-to adevice_list toggle-adevice-browser;show-text ''", "", false},
+        {COMMAND, "[External Script] Toggle dynaudnorm Mixing Menu", "ALT+n", "script-message-to drcbox key_toggle_bindings", "", false},
+    },
+
+    -- Use function to return list of Audio Tracks
+    audtrack_menu = audTrackMenu(),
+    channel_layout = audLayoutMenu(),
+
+-- Secondary menu — Subtitle
+    subtitle_menu = {
+        {CASCADE, "Tracks", "subtrack_menu", "", "", function() return inspectSubTrack() end},
+        {SEP},
+        {COMMAND, "Toggle Subtitle Track", "j", "cycle sub;show-text Subtitle Track:${sub}", "", false},
+        {COMMAND, "Toggle Rendering Style", "u", "cycle sub-ass-override;show-text Subtitle Rendering Style:${sub-ass-override}", "", false},
+        {COMMAND, "Toggle Default Font", "T", "cycle-values sub-font 'NotoSansCJKsc-Bold' 'NotoSerifCJKsc-Bold';show-text Using Font:${sub-font}", "", false},
+        {COMMAND, "Load Secondary Subtitle", "k", "cycle secondary-sid;show-text Load Secondary Subtitle:${secondary-sid}", "", false},
+        {SEP},
+        {CASCADE, "Subtitle Compatibility", "sub_menu", "", "", false},
+        {SEP},
+        {COMMAND, "Reset", "SHIFT+BS", "no-osd set sub-delay 0; no-osd set sub-pos 100; no-osd set sub-scale 1.0;show-text Reset Subtitle Status", "", false},
+        {COMMAND, "Font Size -0.1", "ALT+j", "add sub-scale -0.1;show-text Shrink Subtitle:${sub-scale}", "", false},
+        {COMMAND, "Font Size +0.1", "ALT+k", "add sub-scale  0.1;show-text Enlarge Subtitle:${sub-scale}", "", false},
+        {COMMAND, "Delay -0.1", "z", "add sub-delay -0.1;show-text Subtitle Delay:${sub-delay}", "", false},
+        {COMMAND, "Delay +0.1", "x", "add sub-delay  0.1;show-text Subtitle Preload:${sub-delay}", "", false},
+        {COMMAND, "Move Up", "r", "add sub-pos -1;show-text Subtitle Move Up:${sub-pos}", "", false},
+        {COMMAND, "Move Down", "t", "add sub-pos  11;show-text Subtitle Move Down:${sub-pos}", "", false},
+--        {SEP},
+--        {COMMAND, "Subtitle Vertical Position", "", "cycle-values sub-align-y top bottom", "", false},
+--        {RADIO, " Top", "", "set sub-align-y top", function() return stateSubAlign("top") end, false},
+--        {RADIO, " Bottom", "", "set sub-align-y bottom", function() return stateSubAlign("bottom") end, false},
+        {SEP},
+        {COMMAND, "[External Script] Open Subtitle Sync Menu", "CTRL+m", "script-message-to autosubsync autosubsync-menu", "", false},
+        {COMMAND, "[External Script] Toggle Subtitle Selection Script", "Y", "script-message sub-select toggle", "", false},
+        {COMMAND, "[External Script] Export Current Embedded Subtitles", "ALT+m", "script-message-to sub_export export-selected-subtitles", "", false},
+    },
+
+    -- Use function to return list of Subtitle Tracks
+    subtrack_menu = subTrackMenu(),
+
+-- Tertiary menu — Subtitle Compatibility
+    sub_menu = {
+         {COMMAND, "Toggle Font Rendering Method", "F", "cycle sub-font-provider;show-text Font Rendering Method:${sub-font-provider}", "", false},
+         {COMMAND, "Toggle Subtitle Color Conversion Method", "J", "cycle sub-ass-vsfilter-color-compat;show-text Subtitle Color Conversion Method:${sub-ass-vsfilter-color-compat}", "", false},
+         {COMMAND, "Toggle Ass Subtitle Shadow Border Scaling", "X", "cycle-values sub-ass-force-style ScaledBorderAndShadow=no ScaledBorderAndShadow=yes;show-text Force Replace Ass Style:${sub-ass-force-style}", "", false},
+         {CHECK, "Vsfilter Compatibility", "V", "cycle sub-ass-vsfilter-aspect-compat;show-text Vsfilter Compatibility:${sub-ass-vsfilter-aspect-compat}", function() return propNative("sub-ass-vsfilter-aspect-compat") end, false},
+         {CHECK, "Blur Tag Scaling Compatibility", "B", "cycle sub-ass-vsfilter-blur-compat;show-text Blur Tag Scaling Compatibility:${sub-ass-vsfilter-blur-compat}", function() return propNative("sub-ass-vsfilter-blur-compat") end, false},
+         {SEP},
+         {CHECK, "Toggle Unicode Bidirectional Algorithm", "", "cycle sub-ass-feature-bidi-brackets;show-text Enable Unicode Bidirectional Algorithm:${sub-ass-feature-bidi-brackets}", function() return propNative("sub-ass-feature-bidi-brackets") end, false},
+         {CHECK, "Toggle Whole Text Layout Approach", "", "cycle sub-ass-feature-whole-text-layout;show-text Enable Whole Text Layout:${sub-ass-feature-whole-text-layout}", function() return propNative("sub-ass-feature-whole-text-layout") end, false},
+         {CHECK, "Toggle Unicode Wrapping Approach", "", "cycle sub-ass-feature-wrap-unicode;show-text Enable Unicode Wrapping:${sub-ass-feature-wrap-unicode}", function() return propNative("sub-ass-feature-wrap-unicode") end, false},
+         {SEP},
+         {CHECK, "Ass Subtitle Output to Black Borders", "H", "cycle sub-ass-force-margins;show-text Ass Subtitle Output Black Borders:${sub-ass-force-margins}", function() return propNative("sub-ass-force-margins") end, false},
+         {CHECK, "Srt Subtitle Output to Black Borders", "Z", "cycle sub-use-margins;show-text Srt Subtitle Output Black Borders:${sub-use-margins}", function() return propNative("sub-use-margins") end, false},
+         {CHECK, "Pgs Subtitle Output to Black Borders", "P", "cycle stretch-image-subs-to-screen;show-text Pgs Subtitle Output Black Borders:${stretch-image-subs-to-screen}", function() return propNative("stretch-image-subs-to-screen") end, false},
+         {CHECK, "Pgs Subtitle Grayscale Conversion", "p", "cycle sub-gray;show-text Pgs Subtitle Grayscale Conversion:${sub-gray}", function() return propNative("sub-gray") end, false},
         },
 
--- 二级菜单 —— 加载
-        open_menu = {
-            {COMMAND, "[外置脚本] 文件", "CTRL+o", "script-message-to open_dialog import_files", "", false},
-            {COMMAND, "[外置脚本] 地址", "CTRL+O", "script-message-to open_dialog import_url", "", false},
-            {CASCADE, "[外置脚本] 书签", "bookmarker_menu", "", "", false},
-            {CASCADE, "[外部脚本] 剪贴", "copy_menu", "", "", false},
-            {CASCADE, "[外部脚本] 章节制作", "chaptercreat_menu", "", "", false},
-            {COMMAND, "[外置脚本] 内置文件浏览器", "Tab", "script-message-to file_browser browse-files;script-message-to file_browser dynamic/reload;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 开/关 隐身历史", "ALT+l", "script-binding simplehistory/history-incognito-mode", "", false},
-            {COMMAND, "[外置脚本] 打开  历史菜单", "`", "script-binding simplehistory/open-list;show-text ''", "", false},
-            {SEP},
-            {COMMAND, "[外置脚本] 加载其他字幕（切换）", "ALT+e", "script-message-to open_dialog append_sid", "", false},
-            {COMMAND, "[外置脚本] 加载其他音轨（不切换）", "ALT+E", "script-message-to open_dialog append_aid", "", false},
-            {COMMAND, "[外置脚本] 装载次字幕（滤镜型）", "CTRL+e", "script-message-to open_dialog append_vfSub", "", false},
-            {COMMAND, "[外置脚本] 隐藏/显示 次字幕", "CTRL+E", "script-message-to open_dialog toggle_vfSub", "", false},
-            {COMMAND, "[外置脚本] 移除次字幕", "CTRL+ALT+e", "script-message-to open_dialog remove_vfSub", "", false},
-        },
+-- Secondary menu — Filter
+    filter_menu = {
+        {COMMAND, "Clear All Video Filters", "CTRL+`", "vf clr \"\"", "", false},
+        {COMMAND, "Clear All Audio Filters", "ALT+`", "af clr \"\"", "", false},
+        {SEP},
+        {COMMAND, opt.filter01B, opt.filter01C, opt.filter01D, "", false, opt.filter01G},
+        {COMMAND, opt.filter02B, opt.filter02C, opt.filter02D, "", false, opt.filter02G},
+        {COMMAND, opt.filter03B, opt.filter03C, opt.filter03D, "", false, opt.filter03G},
+        {COMMAND, opt.filter04B, opt.filter04C, opt.filter04D, "", false, opt.filter04G},
+        {COMMAND, opt.filter05B, opt.filter05C, opt.filter05D, "", false, opt.filter05G},
+        {COMMAND, opt.filter06B, opt.filter06C, opt.filter06D, "", false, opt.filter06G},
+        {COMMAND, opt.filter07B, opt.filter07C, opt.filter07D, "", false, opt.filter07G},
+        {COMMAND, opt.filter08B, opt.filter08C, opt.filter08D, "", false, opt.filter08G},
+        {COMMAND, opt.filter09B, opt.filter09C, opt.filter09D, "", false, opt.filter09G},
+        {COMMAND, opt.filter10B, opt.filter10C, opt.filter10D, "", false, opt.filter10G},
+    },
 
--- 三级菜单 —— 书签
-        bookmarker_menu = {
-            {COMMAND, "打开书签菜单", "N", "script-binding simplebookmark/open-list;show-text ''", "", false},
-            {COMMAND, "添加进度书签", "CTRL+n", "script-binding simplebookmark/bookmark-save", "", false},
-            {COMMAND, "添加文件书签", "ALT+n", "script-binding simplebookmark/bookmark-fileonly", "", false},
-        },
--- 三级菜单 —— 剪贴
-        copy_menu = {
-            {COMMAND, "打开剪贴菜单", "ALT+w", "script-binding smartcopypaste_II/open-list;show-text ''", "", false},
-            {COMMAND, "复制文件路径", "CTRL+ALT+c", "script-binding smartcopypaste_II/copy-specific", "", false},
-            {COMMAND, "复制文件路径及进度", "CTRL+c", "script-binding smartcopypaste_II/copy", "", false},
-            {COMMAND, "跳转到复制内容", "CTRL+v", "script-binding smartcopypaste_II/paste", "", false},
-            {COMMAND, "复制内容添加至播放列表", "CTRL+ALT+v", "script-binding smartcopypaste_II/paste-specific", "", false},
-        },
--- 三级菜单 —— 章节制作
-        chaptercreat_menu = {
-            {COMMAND, "标记章节时间", "ALT+C", "script-message create_chapter", "", false},
-            {COMMAND, "创建chp外部章节文件", "ALT+B", "script-message write_chapter", "", false},
-            {COMMAND, "创建xml外部章节文件", "CTRL+ALT+b", "script-message write_chapter_xml", "", false},
-        },
--- 二级菜单 —— 文件
-        file_menu = {
-            {CHECK, "播放/暂停", "SPACE", "cycle pause;show-text 暂停:${pause}", function() return propNative("pause") end, false},
-            {COMMAND, "停止", "SHIFT+F11", "stop", "", false},
-            {COMMAND, "重置播放中更改项", "R", "cycle-values reset-on-next-file all no vf,af,border,contrast,brightness,gamma,saturation,hue,video-zoom,video-rotate,video-pan-x,video-pan-y,panscan,speed,audio,sub,audio-delay,sub-pos,sub-scale,sub-delay,sub-speed,sub-visibility;show-text 播放下一个文件时重置以下选项:${reset-on-next-file}", "", false},
-            {SEP},
-            {AB, "A-B循环", "l", "ab-loop", function() return stateABLoop() end, false},
-            {CHECK, "循环播放", "L", "cycle-values loop-file inf no;show-text 循环播放:${loop-file}", function() return stateFileLoop() end, false},
-            {SEP},
-            {COMMAND, "速度 -0.1", "[", "add speed -0.1;show-text 减速播放:${speed}", "", false},
-            {COMMAND, "速度 +0.1", "]", "add speed  0.1;show-text 加速播放:${speed}", "", false},
-            {COMMAND, "半速", "{", "set speed 0.5;show-text 半速播放:${speed}", "", false},
-            {COMMAND, "倍速", "}", "set speed 2;show-text 倍速播放:${speed}", "", false},
-            {COMMAND, "重置速度", "BS", "set speed 1;show-text 重置播放速度:${speed}", "", false},
-            {SEP},
-            {COMMAND, "[外置脚本] 定位当前文件", "ALT+o", "script_message-to locatefile locate-current-file", "", false},
-            {COMMAND, "[外置脚本] 删除当前文件", "CTRL+DEL", "script-message-to delete_current_file delete-file 1 '请按1确认删除'", "", false},
-            {CASCADE, "[外置脚本] Youtube-dl菜单", "ytdl_menu", "", "", false},
-        },
+-- Secondary menu — Shader
+    shader_menu = {
+        {COMMAND, "Clear All Shaders", "CTRL+0", "change-list glsl-shaders clr \"\"", "", false},
+        {SEP},
+        {COMMAND, opt.shader01B, opt.shader01C, opt.shader01D, "", false, opt.shader01G},
+        {COMMAND, opt.shader02B, opt.shader02C, opt.shader02D, "", false, opt.shader02G},
+        {COMMAND, opt.shader03B, opt.shader03C, opt.shader03D, "", false, opt.shader03G},
+        {COMMAND, opt.shader04B, opt.shader04C, opt.shader04D, "", false, opt.shader04G},
+        {COMMAND, opt.shader05B, opt.shader05C, opt.shader05D, "", false, opt.shader05G},
+        {COMMAND, opt.shader06B, opt.shader06C, opt.shader06D, "", false, opt.shader06G},
+        {COMMAND, opt.shader07B, opt.shader07C, opt.shader07D, "", false, opt.shader07G},
+        {COMMAND, opt.shader08B, opt.shader08C, opt.shader08D, "", false, opt.shader08G},
+        {COMMAND, opt.shader09B, opt.shader09C, opt.shader09D, "", false, opt.shader09G},
+        {COMMAND, opt.shader10B, opt.shader10C, opt.shader10D, "", false, opt.shader10G},
+    },
 
--- 三级菜单 —— Youtube-dl菜单
-        ytdl_menu = {
-            {COMMAND, "开/关 ytdl视频选择菜单", "CTRL+F", "script-message-to quality_menu video_formats_toggle;show-text ''", "", false},
-            {COMMAND, "开/关 ytdl音频选择菜单", "ALT+F", "script-message-to quality_menu audio_formats_toggle;show-text ''", "", false},
-            {COMMAND, "重新加载", "CTRL+ALT+f", "script-message-to quality_menu reload", "", false},
-            {COMMAND, "下载ytdl视频", "ALT+V", "script-message-to youtube_download download-video", "", false},
-            {COMMAND, "下载ytdl音频", "ALT+Y", "script-message-to youtube_download download-audio", "", false},
-            {COMMAND, "下载ytdl字幕", "ALT+Z", "script-message-to youtube_download download-subtitle", "", false},
-            {COMMAND, "下载ytdl字幕+视频", "CTRL+ALT+V", "script-message-to youtube_download download-embed-subtitle", "", false},
-            {COMMAND, "选择ytdl下载片段", "ALT+R", "script-message-to youtube_download select-range-start", "", false},
-        },
+-- Secondary menu — Other
+    etc_menu = {
+        {COMMAND, "[Internal Script] Display Info (Toggle)", "I", "script-binding stats/display-stats-toggle", "", false},
+        {COMMAND, "[Internal Script] Info Overview", "", "script-binding stats/display-page-1", "", false},
+        {COMMAND, "[Internal Script] Frame Timing Info (Paginated)", "", "script-binding stats/display-page-2", "", false},
+        {COMMAND, "[Internal Script] Input Buffer Info", "", "script-binding stats/display-page-3", "", false},
+        {COMMAND, "[Internal Script] Shortcut Info (Paginated)", "", "script-binding stats/display-page-4", "", false},
+        {COMMAND, "[Internal Script] Internal Streams Info (Paginated)", "", "script-binding stats/display-page-0", "", false},
+        {COMMAND, "[Internal Script] Console", "~", "script-binding console/enable", "", false},
+    },
 
--- 二级菜单 —— 导航
-        navi_menu = {
-            {CHECK, "显示OSD时间轴", "O", "no-osd cycle-values osd-level 3 1", function() return stateOsdLevel(3) end, false},
---            {COMMAND, "显示OSD时间轴", "O", "no-osd cycle-values osd-level 3 1", "", false},
---            {RADIO, " 开", "", "set osd-level 3", function() return stateOsdLevel(3) end, false},
---            {RADIO, " 关", "", "set osd-level 1", function() return stateOsdLevel(1) end, false},  
-            {COMMAND, "OSD轨道信息", "", "show-text ${track-list} 5000", "", false},
-            {CASCADE, "OSD交互菜单", "advosd_menu", "", "", false},
-            {SEP},
-            {CASCADE, "版本（Edition）", "edition_menu", "", "", function() return inspectEdition() end},
-            {CASCADE, "章节", "chapter_menu", "", "", function() return inspectChapter() end},
-            {SEP},
-            {CHECK, "列表循环", "", "cycle-values loop-playlist inf no", function() return statePlayLoop() end, false},
-            {CHECK, "随机播放", "", "cycle shuffle", function() return propNative("shuffle") end, false},
-            {COMMAND, "清除播放列表", "", "playlist-clear", "", false},
-            {COMMAND, "播放列表乱序重排", "", "playlist-shuffle", "", false},
-            {COMMAND, "播放列表恢复排序", "", "playlist-unshuffle", "", false},
-            {SEP},
-            {COMMAND, "重播", "", "seek 0 absolute", "", false},
-            {COMMAND, "上个文件", "<", "playlist-prev;show-text 播放列表:${playlist-pos-1}/${playlist-count}", "", false},
-            {COMMAND, "下个文件", ">", "playlist-next;show-text 播放列表:${playlist-pos-1}/${playlist-count}", "", false},
-            {COMMAND, "上一帧", ",", "frame-back-step;show-text 当前帧:${estimated-frame-number}", "", false},
-            {COMMAND, "下一帧", ".", "frame-step;show-text 当前帧:${estimated-frame-number}", "", false},
-            {CASCADE, "前进后退", "seek_menu", "", "", false},
-            {SEP},
-            {CASCADE, "[外置脚本] 跳转", "undoredo_menu", "", "", false},
-            {COMMAND, "[外置脚本] 自动跳过指定章节", "ALT+q", "script-message-to chapterskip chapter-skip;show-text 自动跳过指定章节", "", false},
-            {COMMAND, "[外置脚本] 跳到下一个静音位置", "F4", "script-message-to skiptosilence skip-to-silence;show-text 跳到下一个静音位置", "", false},
-        },
+-- Secondary menu — Tools
+    tool_menu = {
+        {COMMAND, "[External Script] Match Video Refresh Rate", "CTRL+F10", "script-binding change_refresh/match-refresh", "", false},
+        {COMMAND, "[External Script] Copy Current Time", "CTRL+ALT+t", "script-message-to copy_subortime copy-time", "", false},
+        {COMMAND, "[External Script] Copy Current Subtitle Content", "CTRL+ALT+s", "script-message-to copy_subortime copy-subtitle", "", false},
+        {COMMAND, "[External Script] Update Script Shaders", "M", "script-message manager-update-all;show-text Update Script Shaders", "", false},
+    },
 
-        -- Use functions returning tables, since we don't need these menus if there aren't any editions or any chapters to seek through.
-        edition_menu = editionMenu(),
-        chapter_menu = chapterMenu(),
+-- Secondary menu — Configuration Profiles
+    profile_menu = {
+        {COMMAND, "[External Script] Switch to Specified Profile", "CTRL+P", "script-message cycle-commands \"apply-profile Anime4K;show-text Profile: Anime4K\" \"apply-profile ravu-3x;show-text Profile: ravu-3x\" \"apply-profile Normal;show-text Profile: Normal\" \"apply-profile AMD-FSR_EASU;show-text Profile: AMD-FSR_EASU\" \"apply-profile NNEDI3;show-text Profile: NNEDI3\"", "", false},
+        {SEP},
+        {COMMAND, "Switch to Normal Profile", "ALT+1", "apply-profile Normal;show-text Profile: Normal", "", false},
+        {COMMAND, "Switch to Normal+ Profile", "ALT+2", "apply-profile Normal+;show-text Profile: Normal+", "", false},
+        {COMMAND, "Switch to Anime Profile", "ALT+3", "apply-profile Anime;show-text Profile: Anime", "", false},
+        {COMMAND, "Switch to Anime+ Profile", "ALT+4", "apply-profile Anime+;show-text Profile: Anime+", "", false},
+        {COMMAND, "Switch to Ravu-lite Profile", "", "apply-profile ravu-lite;show-text Profile: ravu-lite", "", false},
+        {COMMAND, "Switch to Ravu-3x Profile", "ALT+5", "apply-profile ravu-3x;show-text Profile: ravu-3x", "", false},
+        {COMMAND, "Switch to ACNet Profile", "ALT+6", "apply-profile ACNet;show-text Profile: ACNet", "", false},
+        {COMMAND, "Switch to ACNet+ Profile", "", "apply-profile ACNet+;show-text Profile: ACNet+", "", false},
+        {COMMAND, "Switch to Anime4K Profile", "ALT+7", "apply-profile Anime4K;show-text Profile: Anime4K", "", false},
+        {COMMAND, "Switch to Anime4K+ Profile", "", "apply-profile Anime4K+;show-text Profile: Anime4K+", "", false},
+        {COMMAND, "Switch to NNEDI3 Profile", "ALT+8", "apply-profile NNEDI3;show-text Profile: NNEDI3", "", false},
+        {COMMAND, "Switch to NNEDI3+ Profile", "", "apply-profile NNEDI3+;show-text Profile: NNEDI3+", "", false},
+        {COMMAND, "Switch to AMD-FSR_EASU Profile", "ALT+9", "apply-profile AMD-FSR_EASU;show-text Profile: AMD-FSR_EASU", "", false},
+        {COMMAND, "Switch to Blur2Sharpen Profile", "ALT+0", "apply-profile Blur2Sharpen;show-text Profile: Blur2Sharpen", "", false},
+        {COMMAND, "Switch to SSIM Profile", "", "apply-profile SSIM;show-text Profile: SSIM", "", false},
+        {SEP},
+        {COMMAND, "Switch to ICC Profile", "", "apply-profile ICC;show-text Profile: ICC", "", false},
+        {COMMAND, "Switch to ICC+ Profile", "", "apply-profile ICC+;show-text Profile: ICC+", "", false},
+        {COMMAND, "Switch to Target Profile", "", "apply-profile Target;show-text Profile: Target", "", false},
+        {COMMAND, "Switch to Tscale Profile", "", "apply-profile Tscale;show-text Profile: Tscale", "", false},
+        {COMMAND, "Switch to Tscale-box Profile", "", "apply-profile Tscale-box;show-text Profile: Tscale-box", "", false},
+        {COMMAND, "Switch to DeBand-low Profile", "ALT+1", "apply-profile DeBand-low;show-text Profile: DeBand-low", "", false},
+        {COMMAND, "Switch to DeBand-mediu Profile", "ALT+d", "apply-profile DeBand-medium;show-text Profile: DeBand-medium", "", false},
+        {COMMAND, "Switch to DeBand-high Profile", "ALT+D", "apply-profile DeBand-high;show-text Profile: DeBand-high", "", false},
+    },
 
--- 三级菜单 —— OSD交互菜单
-        advosd_menu = {
-            {COMMAND, "[外置脚本] 播放列表", "F7", "script-message-to playlistmanager showplaylist;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 章节列表", "F8", "script-message-to chapter_list toggle-chapter-browser;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 视频轨列表", "F9", "script-message-to track_menu toggle-vidtrack-browser;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 音频轨列表", "F10", "script-message-to track_menu toggle-audtrack-browser;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 字幕轨列表", "F11", "script-message-to track_menu toggle-subtrack-browser;show-text ''", "", false},
-            {COMMAND, "[外置脚本] Edition列表", "F12", "script-message-to editions_notification_menu toggle-edition-browser;show-text ''", "", false},
-        },
-
--- 三级菜单 —— 前进后退
-        seek_menu = {
-            {COMMAND, "前进05秒", "LEFT", "seek 5", "", false},
-            {COMMAND, "后退05秒", "RIGHT", "seek -5", "", false},
-            {COMMAND, "前进60秒", "UP", "seek 60", "", false},
-            {COMMAND, "后退60秒", "DOWN", "seek -60", "", false},
-            {COMMAND, "精准前进01秒", "SHIFT+LEFT", "seek  1 exact", "", false},
-            {COMMAND, "精准后退01秒", "SHIFT+RIGHT", "seek -1 exact", "", false},
-            {COMMAND, "精准前进80秒", "SHIFT+UP", "seek  80 exact", "", false},
-            {COMMAND, "精准后退80秒", "SHIFT+DOWN", "seek -80 exact", "", false},
-        },
- 
--- 三级菜单 —— 跳转
-        undoredo_menu = {
-            {COMMAND, "撤消跳转", "CTRL+z", "script-binding undoredo/undo", "", false},
-            {COMMAND, "重做跳转", "CTRL+r", "script-binding undoredo/redo", "", false},
-            {COMMAND, "循环跳转", "CTRL+ALT+z", "script-binding undoredo/undoLoop", "", false},
-        },
-
--- 二级菜单 —— 画面
-        output_menu = {
-            {CHECK, "窗口置顶", "ALT+t", "cycle ontop;show-text 置顶:${ontop}", function() return propNative("ontop") end, false},
---            {COMMAND, "窗口置顶", "", "cycle ontop", "", false},
---            {RADIO, "关", "", "set ontop yes", function() return stateOnTop(false) end, false},
---            {RADIO, "开", "", "set ontop no", function() return stateOnTop(true) end, false},
-            {CHECK, "窗口边框", "CTRL+B", "cycle border", function() return propNative("border") end, false},
-            {CHECK, "最大化", "ALT+b", "cycle window-maximized", function() return propNative("window-maximized") end, false},
-            {CHECK, "全屏", "ENTER", "cycle fullscreen", function() return propNative("fullscreen") end, false},
-            {CASCADE, "长宽比", "aspect_menu", "", "", false},
-            {SEP},
-            {COMMAND, "裁切填充（无/最大）", "ALT+p", "cycle-values panscan 0.0 1.0;show-text 视频画面缩放:${panscan}", "", false},
-            {COMMAND, "左旋转", "CTRL+LEFT", "cycle-values video-rotate 0 270 180 90;show-text 视频旋转:${video-rotate}", "", false},
-            {COMMAND, "右旋转", "CTRL+RIGHT", "cycle-values video-rotate 0 90 180 270;show-text 视频旋转:${video-rotate}", "", false},
-            {COMMAND, "画面缩小", "ALT+-", "add video-zoom -0.1;show-text 画面缩小:${video-zoom}", "", false},
-            {COMMAND, "画面放大", "ALT+=", "add video-zoom  0.1;show-text 画面放大:${video-zoom}", "", false},
-            {CASCADE, "画面移动", "videopan_menu", "", "", false},
-            {COMMAND, "窗口缩小", "CTRL+-", "add current-window-scale -0.1;show-text 当前窗口缩小:${current-window-scale}", "", false},
-            {COMMAND, "窗口放大", "CTRL+=", "add current-window-scale  0.1;show-text 当前窗口放大:${current-window-scale}", "", false},
-            {COMMAND, "重置", "ALT+BS", "set video-zoom 0;set panscan 0;set video-rotate 0;set video-pan-x 0;set video-pan-y 0;show-text 重置画面操作", "", false},
-            {SEP},
-            {CHECK, "自动ICC校色", "CTRL+I", "cycle icc-profile-auto;show-text ICC自动校色:${icc-profile-auto}", function() return propNative("icc-profile-auto") end, false},
-            {CHECK, "非线性色彩转换", "ALT+s", "cycle sigmoid-upscaling;show-text 非线性色彩转换:${sigmoid-upscaling}", function() return propNative("sigmoid-upscaling") end, false},
-            {COMMAND, "切换 gamma环境系数", "G", "cycle-values gamma-factor 1.1 1.2 1.0;show-text gamma环境系数:${gamma-factor}", "", false},
-            {COMMAND, "切换 hdr映射曲线 ", "h", "cycle-values tone-mapping auto mobius reinhard hable bt.2390 gamma spline bt.2446a;show-text hdr映射曲线:${tone-mapping}", "", false},
-            {COMMAND, "切换 hdr动态映射", "ALT+h", "cycle-values hdr-compute-peak yes no;show-text hdr动态映射:${hdr-compute-peak}", "", false},
-            {COMMAND, "切换 色调映射模式", "CTRL+t", "cycle tone-mapping-mode;show-text 色调映射模式:${tone-mapping-mode}", "", false},
-            {COMMAND, "切换 色域剪切模式", "CTRL+g", "cycle gamut-mapping-mode;show-text 色域剪切方式:${gamut-mapping-mode}", "", false},
-        },
-
--- 三级菜单 —— 长宽比
-        aspect_menu = {
-            {COMMAND, "重置", "", "set video-aspect-override -1", "", false},
-            {RADIO, "强制4:3", "", "set video-aspect-override 4:3", function() return stateRatio("4:3") end, false},
-            {RADIO, "强制16:9", "", "set video-aspect-override 16:9", function() return stateRatio("16:9") end, false},
-            {RADIO, "强制16:10", "", "set video-aspect-override 16:10", function() return stateRatio("16:10") end, false},
-            {RADIO, "强制1.85:1", "", "set video-aspect-override 1.85:1", function() return stateRatio("1.85:1") end, false},
-            {RADIO, "强制2.35:1", "", "set video-aspect-override 2.35:1", function() return stateRatio("2.35:1") end, false},
-        },
-
--- 三级菜单 —— 画面移动
-        videopan_menu = {
-            {COMMAND, "重置", "", "set video-pan-x 0;set video-pan-y 0;show-text 重置画面移动", "", false},
-            {COMMAND, "画面左移动", "ALT+LEFT", "add video-pan-x -0.1;show-text 画面左移动:${video-pan-x}", "", false},
-            {COMMAND, "画面右移动", "ALT+RIGHT", "add video-pan-x  0.1;show-text 画面右移动:${video-pan-x}", "", false},
-            {COMMAND, "画面上移动", "ALT+UP", "add video-pan-y -0.1;show-text 画面上移动:${video-pan-y}", "", false},
-            {COMMAND, "画面下移动", "ALT+DOWN", "add video-pan-y  0.1;show-text 画面下移动:${video-pan-y}", "", false},
-        },
-
--- 二级菜单 —— 视频
-        video_menu = {
-            {CASCADE, "轨道", "vidtrack_menu", "", "", function() return inspectVidTrack() end},
-            {SEP},
-            {CASCADE, "解码模式", "hwdec_menu", "", "", false},
-            {COMMAND, "开/关 flip模式", "CTRL+f", "cycle d3d11-flip;show-text flip模式:${d3d11-flip}", "", false},
-            {COMMAND, "开/关 兼容x264旧编码模式", "", "cycle vd-lavc-assume-old-x264;show-text 兼容x264旧编码模式:${vd-lavc-assume-old-x264}", "", false},
-            {COMMAND, "切换  帧同步模式", "CTRL+p", "cycle-values video-sync display-resample audio display-vdrop display-resample-vdrop;show-text 帧同步模式:${video-sync}", "", false},
-            {CHECK, "抖动补偿", "ALT+i", "cycle interpolation;show-text 抖动补偿:${interpolation}", function() return propNative("interpolation") end, false},
-            {COMMAND, "开/关 去黑边", "C", "script-message-to dynamic_crop toggle_crop", "", false},
-            {CHECK, "去交错", "d", "cycle deinterlace;show-text 去交错:${deinterlace}", function() return propNative("deinterlace") end, false},
-            {CHECK, "去色带", "D", "cycle deband;show-text 去色带:${deband}", function() return propNative("deband") end, false},
-            {COMMAND, "去色带强度+1", "ALT+z", "add deband-iterations +1;show-text 增加去色带强度:${deband-iterations}", "", false},
-            {COMMAND, "去色带强度-1", "ALT+x", "add deband-iterations -1;show-text 降低去色带强度:${deband-iterations}", "", false},
-            {SEP},
-            {CASCADE, "调色", "color_menu", "", "", false},
-            {CASCADE, "截屏", "screenshot_menu", "", "", false},
-            {SEP},
-            {CASCADE, "[外置脚本] 剪切片段", "slicing_menu", "", "", false},
-            {CASCADE, "[外置脚本] 剪切动图", "webp_menu", "", "", false},
-        },
-
-        -- Use function to return list of Video Tracks
-        vidtrack_menu = vidTrackMenu(),
-
--- 三级菜单 —— 解码
-        hwdec_menu = {
-            {COMMAND, "优先 软解", "", "set hwdec no", "", false},
-            {COMMAND, "优先 硬解", "", "set hwdec auto-safe", "", false},
-            {COMMAND, "优先 硬解（copy）", "", "set hwdec auto-copy-safe", "", false},
-            {SEP},
-            {RADIO, "SW", "", "set hwdec no", function() return stateHwdec("no") end, false},
-            {RADIO, "nvdec", "", "set hwdec nvdec", function() return stateHwdec("nvdec") end, false},
-            {RADIO, "nvdec-copy", "", "set hwdec nvdec-copy", function() return stateHwdec("nvdec-copy") end, false},
-            {RADIO, "d3d11va", "", "set hwdec d3d11va", function() return stateHwdec("d3d11va") end, false},
-            {RADIO, "d3d11va-copy", "", "set hwdec d3d11va-copy", function() return stateHwdec("d3d11va-copy") end, false},
-            {RADIO, "dxva2", "", "set hwdec dxva2", function() return stateHwdec("dxva2") end, false},
-            {RADIO, "dxva2-copy", "", "set hwdec dxva2-copy", function() return stateHwdec("dxva2-copy") end, false},
-            {RADIO, "cuda", "", "set hwdec cuda", function() return stateHwdec("cuda") end, false},
-            {RADIO, "cuda-copy", "", "set hwdec cuda-copy", function() return stateHwdec("cuda-copy") end, false},
-        },
-
--- 三级菜单 —— 调色
-        color_menu = {
-            {COMMAND, "重置", "CTRL+BS", "no-osd set contrast 0; no-osd set brightness 0; no-osd set gamma 0; no-osd set saturation 0; no-osd set hue 0;show-text 重置调色", "", false},
-            {COMMAND, "对比 -1", "1", "add contrast -1;show-text 对比度:${contrast}", "", false},
-            {COMMAND, "对比 +1", "2", "add contrast  1;show-text 对比度:${contrast}", "", false},
-            {COMMAND, "明亮 -1", "3", "add brightness -1;show-text 亮度:${brightness}", "", false},
-            {COMMAND, "明亮 +1", "4", "add brightness  1;show-text 亮度:${brightness}", "", false},
-            {COMMAND, "伽马 -1", "5", "add gamma -1;show-text 伽马:${gamma}", "", false},
-            {COMMAND, "伽马 +1", "6", "add gamma  1;show-text 伽马:${gamma}", "", false},
-            {COMMAND, "饱和 -1", "7", "add saturation -1;show-text 饱和度:${saturation}", "", false},
-            {COMMAND, "饱和 +1", "8", "add saturation  1;show-text 饱和度:${saturation}", "", false},
-            {COMMAND, "色相 -1", "-", "add hue -1;show-text 色相:${hue}", "", false},
-            {COMMAND, "色相 +1", "=", "add hue  1;show-text 色相:${hue}", "", false},
-        },
-
--- 三级菜单 —— 截屏
-        screenshot_menu = {
-            {COMMAND, "同源尺寸-有字幕-有OSD-单帧", "s", "screenshot subtitles", "", false},
-            {COMMAND, "同源尺寸-无字幕-无OSD-单帧", "S", "screenshot video", "", false},
-            {COMMAND, "实际尺寸-有字幕-有OSD-单帧", "CTRL+s", "screenshot window", "", false},
-            {SEP},
-            {COMMAND, "同源尺寸-有字幕-有OSD-逐帧", "", "screenshot subtitles+each-frame", "", false},
-            {COMMAND, "同源尺寸-无字幕-无OSD-逐帧", "", "screenshot video+each-frame", "", false},
-            {COMMAND, "实际尺寸-有字幕-有OSD-逐帧", "CTRL+S", "screenshot window+each-frame", "", false},
-        },
-
--- 三级菜单 —— 剪切片段
-        slicing_menu = {
-            {COMMAND, "指定剪切起始/结束位置", "c", "script-message slicing_mark", "", false},
-            {COMMAND, "开/关 剪切音频信息", "a", "script-message slicing_audio", "", false},
-            {COMMAND, "清除标记", "CTRL+C", "script-message clear_slicing_mark", "", false},
-        },
-
--- 三级菜单 —— 剪切动图
-        webp_menu = {
-            {COMMAND, "开始时间", "w", "script-message set_webp_start", "", false},
-            {COMMAND, "结束时间", "W", "script-message set_webp_end", "", false},
-            {COMMAND, "导出webp动图", "CTRL+w", "script-message make_webp", "", false},
-            {COMMAND, "导出带字幕的动图", "CTRL+W", "script-message make_webp_with_subtitles", "", false},
-
-        },
-
--- 二级菜单 —— 音频
-        audio_menu = {
-            {CASCADE, "轨道", "audtrack_menu", "", "", function() return inspectAudTrack() end},
-            {SEP},
-            {COMMAND, "切换 音轨", "y", "cycle audio;show-text 音轨切换为:${audio}", "", false},
-            {CHECK, "音频规格化", "", "cycle audio-normalize-downmix;show-text 音频规格化:${audio-normalize-downmix}", function() return propNative("audio-normalize-downmix") end, false},
-            {CHECK, "音频独占模式", "CTRL+y", "cycle audio-exclusive;show-text 音频独占模式:${audio-exclusive}", function() return propNative("audio-exclusive") end, false},
-            {CHECK, "音频同步模式", "CTRL+Y", "cycle hr-seek-framedrop;show-text 音频同步模式:${hr-seek-framedrop}", function() return propNative("hr-seek-framedrop") end, false},
-            {COMMAND, "多通道音轨调节各通道音", "F2", "cycle-values  af @loudnorm:lavfi=[loudnorm=I=-16:TP=-3:LRA=4] @dynaudnorm:lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5] \"\"", "", false},
-            {SEP},
-            {COMMAND, "音量 -1", "9", "add volume -1;show-text 音量:${volume}", "", false},
-            {COMMAND, "音量 +1", "0", "add volume  1;show-text 音量:${volume}", "", false},
-            {CHECK, function() return muteLabel() end, "m", "cycle mute;show-text 静音:${mute}", function() return propNative("mute") end, false},
-            {SEP},
-            {COMMAND, "延迟 -0.1", "CTRL+,", "add audio-delay -0.1;show-text 音频延迟:${audio-delay}", "", false},
-            {COMMAND, "延迟 +0.1", "CTRL+.", "add audio-delay +0.1;show-text 音频预载:${audio-delay}", "", false},
-            {COMMAND, "重置偏移", ";", "set audio-delay 0;show-text 重置音频延迟:${audio-delay}", "", false},
-            {SEP},
-            {CASCADE, "声道布局", "channel_layout", "", "", false},
-            {SEP},
-            {COMMAND, "[外置脚本] 开/关 交互式音频设备菜单", "F6", "script-message-to adevice_list toggle-adevice-browser;show-text ''", "", false},
-            {COMMAND, "[外置脚本] 开/关 dynaudnorm混音菜单", "ALT+n", "script-message-to drcbox key_toggle_bindings", "", false},
-        },
-
-        -- Use function to return list of Audio Tracks
-        audtrack_menu = audTrackMenu(),
-        channel_layout = audLayoutMenu(),
-
--- 二级菜单 —— 字幕
-        subtitle_menu = {
-            {CASCADE, "轨道", "subtrack_menu", "", "", function() return inspectSubTrack() end},
-            {SEP},
-            {COMMAND, "切换 字幕", "j", "cycle sub;show-text 字幕切换为:${sub}", "", false},
-            {COMMAND, "切换 渲染样式", "u", "cycle sub-ass-override;show-text 字幕渲染样式:${sub-ass-override}", "", false},
-            {COMMAND, "切换 默认字体", "T", "cycle-values sub-font 'NotoSansCJKsc-Bold' 'NotoSerifCJKsc-Bold';show-text 使用字体:${sub-font}", "", false},
-            {COMMAND, "加载次字幕", "k", "cycle secondary-sid;show-text 加载次字幕:${secondary-sid}", "", false},
-            {SEP},
-            {CASCADE, "字幕兼容性", "sub_menu", "", "", false},
-            {SEP},
-            {COMMAND, "重置", "SHIFT+BS", "no-osd set sub-delay 0; no-osd set sub-pos 100; no-osd set sub-scale 1.0;show-text 重置字幕状态", "", false},
-            {COMMAND, "字号 -0.1", "ALT+j", "add sub-scale -0.1;show-text 字幕缩小:${sub-scale}", "", false},
-            {COMMAND, "字号 +0.1", "ALT+k", "add sub-scale  0.1;show-text 字幕放大:${sub-scale}", "", false},
-            {COMMAND, "延迟 -0.1", "z", "add sub-delay -0.1;show-text 字幕延迟:${sub-delay}", "", false},
-            {COMMAND, "延迟 +0.1", "x", "add sub-delay  0.1;show-text 字幕预载:${sub-delay}", "", false},
-            {COMMAND, "上移", "r", "add sub-pos -1;show-text 字幕上移:${sub-pos}", "", false},
-            {COMMAND, "下移", "t", "add sub-pos  11;show-text 字幕下移:${sub-pos}", "", false},
---            {SEP},
---            {COMMAND, "字幕纵向位置", "", "cycle-values sub-align-y top bottom", "", false},
---            {RADIO, " 顶部", "", "set sub-align-y top", function() return stateSubAlign("top") end, false},
---            {RADIO, " 底部", "", "set sub-align-y bottom", function() return stateSubAlign("bottom") end, false},
-            {SEP},
-            {COMMAND, "[外部脚本] 打开  字幕同步菜单", "CTRL+m", "script-message-to autosubsync autosubsync-menu", "", false},
-            {COMMAND, "[外部脚本] 开/关 字幕选择脚本", "Y", "script-message sub-select toggle", "", false},
-            {COMMAND, "[外部脚本] 导出当前内封字幕", "ALT+m", "script-message-to sub_export export-selected-subtitles", "", false},
-        },
-
-        -- Use function to return list of Subtitle Tracks
-        subtrack_menu = subTrackMenu(),
-
--- 三级菜单 —— 字幕兼容性
-        sub_menu = {
-             {COMMAND, "切换 字体渲染方式", "F", "cycle sub-font-provider;show-text 字体渲染方式:${sub-font-provider}", "", false},
-             {COMMAND, "切换 字幕颜色转换方式", "J", "cycle sub-ass-vsfilter-color-compat;show-text 字幕颜色转换方式:${sub-ass-vsfilter-color-compat}", "", false},
-             {COMMAND, "切换 ass字幕阴影边框缩放", "X", "cycle-values sub-ass-force-style ScaledBorderAndShadow=no ScaledBorderAndShadow=yes;show-text 强制替换ass样式:${sub-ass-force-style}", "", false},
-             {CHECK, "vsfilter系兼容性", "V", "cycle sub-ass-vsfilter-aspect-compat;show-text vsfilter系兼容性:${sub-ass-vsfilter-aspect-compat}", function() return propNative("sub-ass-vsfilter-aspect-compat") end, false},
-             {CHECK, "blur标签缩放兼容性", "B", "cycle sub-ass-vsfilter-blur-compat;show-text blur标签缩放兼容性:${sub-ass-vsfilter-blur-compat}", function() return propNative("sub-ass-vsfilter-blur-compat") end, false},
-             {SEP},
-             {CHECK, "开/关 Unicode双向算法", "", "cycle sub-ass-feature-bidi-brackets;show-text 启用Unicode双向算法:${sub-ass-feature-bidi-brackets}", function() return propNative("sub-ass-feature-bidi-brackets") end, false},
-             {CHECK, "开/关 文本整体处理方式", "", "cycle sub-ass-feature-whole-text-layout;show-text 启用文本整体处理:${sub-ass-feature-whole-text-layout}", function() return propNative("sub-ass-feature-whole-text-layout") end, false},
-             {CHECK, "开/关 Unicode换行处理方式", "", "cycle sub-ass-feature-wrap-unicode;show-text 启用Unicode换行处理:${sub-ass-feature-wrap-unicode}", function() return propNative("sub-ass-feature-wrap-unicode") end, false},
-             {SEP},
-             {CHECK, "ass字幕输出到黑边", "H", "cycle sub-ass-force-margins;show-text ass字幕输出黑边:${sub-ass-force-margins}", function() return propNative("sub-ass-force-margins") end, false},
-             {CHECK, "srt字幕输出到黑边", "Z", "cycle sub-use-margins;show-text srt字幕输出黑边:${sub-use-margins}", function() return propNative("sub-use-margins") end, false},
-             {CHECK, "pgs字幕输出到黑边", "P", "cycle stretch-image-subs-to-screen;show-text pgs字幕输出黑边:${stretch-image-subs-to-screen}", function() return propNative("stretch-image-subs-to-screen") end, false},
-             {CHECK, "pgs字幕灰度转换", "p", "cycle sub-gray;show-text pgs字幕灰度转换:${sub-gray}", function() return propNative("sub-gray") end, false},
-            },
--- 二级菜单 —— 滤镜
-        filter_menu = {
-            {COMMAND, "清除全部视频滤镜", "CTRL+`", "vf clr \"\"", "", false},
-            {COMMAND, "清除全部音频滤镜", "ALT+`", "af clr \"\"", "", false},
-            {SEP},
-            {COMMAND, opt.filter01B, opt.filter01C, opt.filter01D, "", false, opt.filter01G},
-            {COMMAND, opt.filter02B, opt.filter02C, opt.filter02D, "", false, opt.filter02G},
-            {COMMAND, opt.filter03B, opt.filter03C, opt.filter03D, "", false, opt.filter03G},
-            {COMMAND, opt.filter04B, opt.filter04C, opt.filter04D, "", false, opt.filter04G},
-            {COMMAND, opt.filter05B, opt.filter05C, opt.filter05D, "", false, opt.filter05G},
-            {COMMAND, opt.filter06B, opt.filter06C, opt.filter06D, "", false, opt.filter06G},
-            {COMMAND, opt.filter07B, opt.filter07C, opt.filter07D, "", false, opt.filter07G},
-            {COMMAND, opt.filter08B, opt.filter08C, opt.filter08D, "", false, opt.filter08G},
-            {COMMAND, opt.filter09B, opt.filter09C, opt.filter09D, "", false, opt.filter09G},
-            {COMMAND, opt.filter10B, opt.filter10C, opt.filter10D, "", false, opt.filter10G},
-        },
-
--- 二级菜单 —— 着色器
-        shader_menu = {
-            {COMMAND, "清除全部着色器", "CTRL+0", "change-list glsl-shaders clr \"\"", "", false},
-            {SEP},
-            {COMMAND, opt.shader01B, opt.shader01C, opt.shader01D, "", false, opt.shader01G},
-            {COMMAND, opt.shader02B, opt.shader02C, opt.shader02D, "", false, opt.shader02G},
-            {COMMAND, opt.shader03B, opt.shader03C, opt.shader03D, "", false, opt.shader03G},
-            {COMMAND, opt.shader04B, opt.shader04C, opt.shader04D, "", false, opt.shader04G},
-            {COMMAND, opt.shader05B, opt.shader05C, opt.shader05D, "", false, opt.shader05G},
-            {COMMAND, opt.shader06B, opt.shader06C, opt.shader06D, "", false, opt.shader06G},
-            {COMMAND, opt.shader07B, opt.shader07C, opt.shader07D, "", false, opt.shader07G},
-            {COMMAND, opt.shader08B, opt.shader08C, opt.shader08D, "", false, opt.shader08G},
-            {COMMAND, opt.shader09B, opt.shader09C, opt.shader09D, "", false, opt.shader09G},
-            {COMMAND, opt.shader10B, opt.shader10C, opt.shader10D, "", false, opt.shader10G},
-        },
-
--- 二级菜单 —— 其它
-        etc_menu = {
-            {COMMAND, "[内部脚本] 状态信息（开/关）", "I", "script-binding stats/display-stats-toggle", "", false},
-            {COMMAND, "[内部脚本] 状态信息-概览", "", "script-binding stats/display-page-1", "", false},
-            {COMMAND, "[内部脚本] 状态信息-帧计时（可翻页）", "", "script-binding stats/display-page-2", "", false},
-            {COMMAND, "[内部脚本] 状态信息-输入缓存", "", "script-binding stats/display-page-3", "", false},
-            {COMMAND, "[内部脚本] 状态信息-快捷键（可翻页）", "", "script-binding stats/display-page-4", "", false},
-            {COMMAND, "[内部脚本] 状态信息-内部流（可翻页）", "", "script-binding stats/display-page-0", "", false},
-            {COMMAND, "[内部脚本] 控制台", "~", "script-binding console/enable", "", false},
-        },
-
--- 二级菜单 —— 工具
-        tool_menu = {
-            {COMMAND, "[外部脚本] 匹配视频刷新率", "CTRL+F10", "script-binding change_refresh/match-refresh", "", false},
-            {COMMAND, "[外部脚本] 复制当前时间", "CTRL+ALT+t", "script-message-to copy_subortime copy-time", "", false},
-            {COMMAND, "[外部脚本] 复制当前字幕内容", "CTRL+ALT+s", "script-message-to copy_subortime copy-subtitle", "", false},
-            {COMMAND, "[外部脚本] 更新脚本着色器", "M", "script-message manager-update-all;show-text 更新脚本着色器", "", false},
-        },
-
--- 二级菜单 —— 配置组
-        profile_menu = {
-            {COMMAND, "[外部脚本] 切换 指定配置组", "CTRL+P", "script-message cycle-commands \"apply-profile Anime4K;show-text 配置组：Anime4K\" \"apply-profile ravu-3x;show-text 配置组：ravu-3x\" \"apply-profile Normal;show-text 配置组：Normal\" \"apply-profile AMD-FSR_EASU;show-text 配置组：AMD-FSR_EASU\" \"apply-profile NNEDI3;show-text 配置组：NNEDI3\"", "", false},
-            {SEP},
-            {COMMAND, "切换 Normal配置", "ALT+1", "apply-profile Normal;show-text 配置组：Normal", "", false},
-            {COMMAND, "切换 Normal+配置", "ALT+2", "apply-profile Normal+;show-text 配置组：Normal+", "", false},
-            {COMMAND, "切换 Anime配置", "ALT+3", "apply-profile Anime;show-text 配置组：Anime", "", false},
-            {COMMAND, "切换 Anime+配置", "ALT+4", "apply-profile Anime+;show-text 配置组：Anime+", "", false},
-            {COMMAND, "切换 Ravu-lite配置", "", "apply-profile ravu-lite;show-text 配置组：ravu-lite", "", false},
-            {COMMAND, "切换 Ravu-3x配置", "ALT+5", "apply-profile ravu-3x;show-text 配置组：ravu-3x", "", false},
-            {COMMAND, "切换 ACNet配置", "ALT+6", "apply-profile ACNet;show-text 配置组：ACNet", "", false},
-            {COMMAND, "切换 ACNet+配置", "", "apply-profile ACNet+;show-text 配置组：ACNet+", "", false},
-            {COMMAND, "切换 Anime4K配置", "ALT+7", "apply-profile Anime4K;show-text 配置组：Anime4K", "", false},
-            {COMMAND, "切换 Anime4K+配置", "", "apply-profile Anime4K+;show-text 配置组：Anime4K+", "", false},
-            {COMMAND, "切换 NNEDI3配置", "ALT+8", "apply-profile NNEDI3;show-text 配置组：NNEDI3", "", false},
-            {COMMAND, "切换 NNEDI3+配置", "", "apply-profile NNEDI3+;show-text 配置组：NNEDI3+", "", false},
-            {COMMAND, "切换 AMD-FSR_EASU配置", "ALT+9", "apply-profile AMD-FSR_EASU;show-text 配置组：AMD-FSR_EASU", "", false},
-            {COMMAND, "切换 Blur2Sharpen配置", "ALT+0", "apply-profile Blur2Sharpen;show-text 配置组：Blur2Sharpen", "", false},
-            {COMMAND, "切换 SSIM配置", "", "apply-profile SSIM;show-text 配置组：SSIM", "", false},
-            {SEP},
-            {COMMAND, "切换 ICC配置", "", "apply-profile ICC;show-text 配置组：ICC", "", false},
-            {COMMAND, "切换 ICC+配置", "", "apply-profile ICC+;show-text 配置组：ICC+", "", false},
-            {COMMAND, "切换 Target配置", "", "apply-profile Target;show-text 配置组：Target", "", false},
-            {COMMAND, "切换 Tscale配置", "", "apply-profile Tscale;show-text 配置组：Tscale", "", false},
-            {COMMAND, "切换 Tscale-box配置", "", "apply-profile Tscale-box;show-text 配置组：Tscale-box", "", false},
-            {COMMAND, "切换 DeBand-low配置", "ALT+1", "apply-profile DeBand-low;show-text 配置组：DeBand-low", "", false},
-            {COMMAND, "切换 DeBand-mediu配置", "ALT+d", "apply-profile DeBand-medium;show-text 配置组：DeBand-medium", "", false},
-            {COMMAND, "切换 DeBand-high配置", "ALT+D", "apply-profile DeBand-high;show-text 配置组：DeBand-high", "", false},
-        },
-
--- 二级菜单 —— 关于
-        about_menu = {
-            {COMMAND, mp.get_property("mpv-version"), "", "", "", false},
-            {COMMAND, "ffmpeg " .. mp.get_property("ffmpeg-version"), "", "", "", false},
-            {COMMAND, "libass " .. mp.get_property("libass-version"), "", "", "", false},
-        },
+-- Secondary menu — About
+about_menu = {
+    {COMMAND, mp.get_property("mpv-version"), "", "", "", false},
+    {COMMAND, "ffmpeg " .. mp.get_property("ffmpeg-version"), "", "", "", false},
+    {COMMAND, "libass " .. mp.get_property("libass-version"), "", "", "", false},
+},
 
 --[[
-留着备用
+Reserved for future use
             -- Y Values: -1 = Top, 0 = Vertical Center, 1 = Bottom
             -- X Values: -1 = Left, 0 = Horizontal Center, 1 = Right
             {RADIO, "Top", "", "set video-align-y -1", function() return stateAlign("y",-1) end, false},
@@ -1101,22 +1088,21 @@ local function playmenuList()
             {COMMAND, "Move Down", "", function() movePlaylist("down") end, "", function() return (propNative("playlist-count") < 2) and true or false end},
 ]]--
 
-    }
+}
 
-    -- This check ensures that all tables of data without SEP in them are 6 or 7 items long.
-    for key, value in pairs(menuList) do
-        -- Skip the 'file_loaded_menu' key as the following for loop will fail due to an
-        -- attempt to get the length of a boolean value.
-        if (key == "file_loaded_menu") then goto keyjump end
+-- This check ensures that all tables of data without SEP in them are 6 or 7 items long.
+for key, value in pairs(menuList) do
+    -- Skip the 'file_loaded_menu' key as the following for loop will fail due to an
+    -- attempt to get the length of a boolean value.
+    if (key == "file_loaded_menu") then goto keyjump end
 
-        for i = 1, #value do
-            if (value[i][1] ~= SEP) then
-                if (#value[i] < 6 or #value[i] > 7) then mpdebug("Menu item at index of " .. i .. " is " .. #value[i] .. " items long for: " .. key) end
-            end
+    for i = 1, #value do
+        if (value[i][1] ~= SEP) then
+            if (#value[i] < 6 or #value[i] > 7) then mpdebug("Menu item at index of " .. i .. " is " .. #value[i] .. " items long for: " .. key) end
         end
-        
-        ::keyjump::
     end
+    
+    ::keyjump::
 end
 
 mp.add_hook("on_preloaded", 100, playmenuList)
@@ -1133,11 +1119,10 @@ mp.register_event("end-file", function()
     menuList = menuListBase
 end)
 
---[[ ************ 菜单内容 ************ ]]--
+--[[ ************ Menu Content ************ ]]--
 
 local menuEngine = require "contextmenu_gui_engine"
 
 mp.register_script_message("contextmenu_tk", function()
     menuEngine.createMenu(menuList, "context_menu", -1, -1, "tk")
 end)
-
