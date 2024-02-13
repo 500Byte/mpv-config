@@ -52,20 +52,20 @@ local user_opts = {
     iamaprogrammer = false,             -- use native mpv values and disable OSC
                                         -- internal track list management (and some
                                         -- functions that depend on it)
-    layout = "bottombar",               -- 原版可选为 "bottombar" "topbar" "box" "slimbox" ；在osc_lazy中新增 "bottombox"
+    layout = "bottombar",               -- The original options are "bottombar" "topbar" "box" "slimbox"; added "bottombox" in osc_lazy.
     seekbarstyle = "bar",               -- bar, diamond or knob
     seekbarhandlesize = 0.6,            -- size ratio of the diamond and knob handle
     seekrangestyle = "inverted",        -- bar, line, slider, inverted or none
     seekrangeseparate = true,           -- wether the seekranges overlay on the bar-style seekbar
     seekrangealpha = 200,               -- transparency of seekranges
-    seekbarkeyframes = true,            -- use keyframes when dragging the seekbar       -- 现不受全局hr-seek的控制 
+    seekbarkeyframes = true,            -- use keyframes when dragging the seekbar       -- Currently not controlled by global hr-seek.  
     title = "${media-title}",           -- string compatible with property-expansion
                                         -- to be shown as OSC title
     tooltipborder = 1,                  -- border of tooltip in bottom/topbar
-    timetotal = true,                   -- display total time instead of remaining time? -- 原版为false
+    timetotal = true,                   -- display total time instead of remaining time? -- Original value is false.
     timems = false,                     -- display timecodes with milliseconds?
     visibility = "auto",                -- only used at init to set visibility_mode(...)
-    boxmaxchars = 150,                  -- title crop threshold for box layout           -- 原版为80
+    boxmaxchars = 150,                  -- title crop threshold for box layout           -- Original value is 80.
     boxvideo = false,                   -- apply osc_param.video_margins to video
     windowcontrols = "auto",            -- whether to show window controls
     windowcontrols_alignment = "right", -- which side to show window controls on
@@ -75,16 +75,16 @@ local user_opts = {
     playlist_osd = true,                -- whether to show playlist OSD on next/prev
     chapter_fmt = "章节：%s",           -- chapter print format for seekbar-hover. "no" to disable
 
-    -- 以下为osc_lazy的独占选项
+    -- The following are exclusive options of osc_lazy:
 
-    wctitle = "${media-title}",         -- 无边框的上方标题
-    sub_title = " ",                    -- bottombox布局的右侧子标题
-    sub_title2 = "对比[${contrast}]  亮度[${brightness}]  伽马[${gamma}]  饱和[${saturation}]  色相[${hue}]", -- bottombox布局的临时右侧子标题
-    seekbar_scrollseek = "fast",        -- 进度条的滚轮跳转模式 "fast" "second" "frame" 。不受全局hr-seek的控制
-    showonpause = false,                -- 在暂停时常驻 OSC
-    showonstart = false,                -- 在播放开始或当播放下一个文件时显示 OSC
-    showonseek = false,                 -- 在跳转时显示 OSC
-    font = "sans",                      -- OSC的全局字体显示
+    wctitle = "${media-title}",         -- Title above the borderless OSC
+    sub_title = " ",                    -- Right-hand subtitle of the bottombox layout
+    sub_title2 = "Contrast[${contrast}] Brightness[${brightness}] Gamma[${gamma}] Saturation[${saturation}] Hue[${hue}]", -- Temporary right-hand subtitle of the bottombox layout
+    seekbar_scrollseek = "fast",        -- Scroll seek mode of the seekbar "fast", "second", "frame". Not controlled by global hr-seek
+    showonpause = false,                -- OSC residency during pause
+    showonstart = false,                -- OSC display when playback starts or when the next file is played
+    showonseek = false,                 -- OSC display during seek
+    font = "sans",                      -- Global font display of the OSC
     font_mono = "sans",
     font_bold = 500,
 }
@@ -182,7 +182,7 @@ local state = {
     maximized = false,
     osd = mp.create_osd_overlay("ass-events"),
     chapter_list = {},                      -- sorted by time
-    lastvisibility = user_opts.visibility,  -- 如果showonpause，则在暂停时保存最后一次的可见性
+    lastvisibility = user_opts.visibility,  -- If showonpause is enabled, then preserve the last visibility when paused.
 }
 
 local thumbfast = {
@@ -2394,14 +2394,14 @@ function osc_init()
             -- mouse move events may pile up during seeking and may still get
             -- sent when the user is done seeking, so we need to throw away
             -- identical seeks
-            thumbfast.pause = false --暂停渲染缩略图
+            thumbfast.pause = false --Pause thumbnail rendering
             mp.commandv("script-message-to", "thumbfast", "clear")
             local seekto = get_slider_value(element)
             if (element.state.lastseek == nil) or
                 (not (element.state.lastseek == seekto)) then
-                    local flags = "absolute-percent+keyframes" -- 防止--hr-seek的影响
+                    local flags = "absolute-percent+keyframes" -- Prevent the influence of --hr-seek
                     if not user_opts.seekbarkeyframes then
-                        flags = "absolute-percent+exact"       -- 防止--hr-seek的影响
+                        flags = "absolute-percent+exact"       -- Prevent the influence of --hr-seek
                     end
                     mp.commandv("seek", seekto, flags)
                     element.state.lastseek = seekto
