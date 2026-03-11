@@ -21,6 +21,12 @@ Alternativamente, si ya lo descargaste (por ejemplo, en `~/mpv-config`), copia e
 cp -r ~/mpv-config ~/.config/mpv
 ```
 
+3. **Uso vía enlace simbólico:**
+Si prefieres mantener el repositorio en una carpeta específica y que mpv lo use mediante un link (útil para desarrollo):
+```bash
+ln -s ~/ruta/al/repo ~/.config/mpv
+```
+
 ## Requisitos
 
 - mpv (compilado con soporte Vulkan y VapourSynth)

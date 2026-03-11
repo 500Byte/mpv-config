@@ -47,7 +47,12 @@ function t(text, a)
 	local key = text
 	if a then key = key .. '|' .. a end
 	if cache[key] then return cache[key] end
-	cache[key] = string.format(locale[text] or text, a or '')
+	local trans = locale[text] or text
+	if a then
+		cache[key] = string.format(trans, a)
+	else
+		cache[key] = trans
+	end
 	return cache[key]
 end
 

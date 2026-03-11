@@ -658,7 +658,7 @@ do
 						if not by_id[submenu_id] then
 							local items = {}
 							by_id[submenu_id] = {items = items, items_by_command = {}}
-							target_menu.items[#target_menu.items + 1] = {title = title_part, items = items}
+							target_menu.items[#target_menu.items + 1] = {title = t(title_part), items = items}
 						end
 
 						target_menu = by_id[submenu_id]
