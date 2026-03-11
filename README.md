@@ -94,7 +94,6 @@ Disponibles via Alt+numpad:
 - recentmenu: menu de archivos recientes
 - select: menu de seleccion (tracks, perfiles, configs)
 - stats: estadisticas de rendimiento
-- sub-assrt: buscar subtitulos online
 - uosc_danmaku: soporte de danmaku (comentarios flotantes)
 
 ## Atajos principales
@@ -117,7 +116,7 @@ Disponibles via Alt+numpad:
 | Ctrl+o | Abrir archivo |
 | Ctrl+v | Pegar URL desde clipboard |
 | q / Q | Salir / Salir guardando posicion |
-| Ctrl+f | Buscar subtitulos (assrt) |
+| Ctrl+f | Buscar subtitulos (OpenSubtitles) |
 | Ctrl+d | Buscar danmaku |
 | b | Toggle deband |
 | d | Toggle deinterlace |
