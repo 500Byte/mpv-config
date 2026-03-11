@@ -2,6 +2,8 @@
 
 Configuracion personal de mpv para Linux. Optimizada para AMD Ryzen 7 5800XT + RX 580 a 1440p en CachyOS (Wayland).
 
+Based on [MPV_lazy](https://github.com/hooke007/MPV_lazy).
+
 ## Instalacion
 
 1. Elimina cualquier configuracion anterior de mpv (o muevela a otro lado):
