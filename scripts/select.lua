@@ -25,6 +25,22 @@ local options = {
 
 require "mp.options".read_options(options, nil, function () end)
 
+local locale = {}
+do
+    local es_json_path = mp.command_native({"expand-path", "~~/scripts/uosc/intl/es.json"})
+    local f = io.open(es_json_path, "r")
+    if f then
+        local content = f:read("*all")
+        f:close()
+        locale = utils.parse_json(content) or {}
+    end
+end
+
+local function t(text)
+    return locale[text] or text
+end
+
+
 local function show_warning(message)
     mp.msg.warn(message)
     if mp.get_property_native("vo-configured") then
@@ -65,13 +81,14 @@ mp.add_key_binding(nil, "select-playlist", function ()
     end
 
     if #playlist == 0 then
-        show_warning("播放列表为空")
+        show_warning(t("Playlist is empty"))
         return
     end
 
     input.select({
-        prompt = "选择播放列表条目:",
+        prompt = t("Select playlist entry:"),
         items = playlist,
+
         default_item = default_item,
         submit = function (index)
             mp.commandv("playlist-play-index", index - 1)
@@ -132,13 +149,14 @@ mp.add_key_binding(nil, "select-track", function ()
     end
 
     if #tracks == 0 then
-        show_warning("无可用轨道")
+        show_warning(t("No tracks available"))
         return
     end
 
     input.select({
-        prompt = "选择轨道:",
+        prompt = t("Select track:"),
         items = tracks,
+
         submit = function (id)
             local track = mp.get_property_native("track-list/" .. id - 1)
             if track then
@@ -209,7 +227,7 @@ mp.add_key_binding(nil, "select-chapter", function ()
     local default_item = mp.get_property_native("chapter")
 
     if default_item == nil then
-        show_warning("无可用章节")
+        show_warning(t("No chapters available"))
         return
     end
 
@@ -220,8 +238,9 @@ mp.add_key_binding(nil, "select-chapter", function ()
     end
 
     input.select({
-        prompt = "选择章节:",
+        prompt = t("Select chapter:"),
         items = chapters,
+
         default_item = default_item > -1 and default_item + 1,
         submit = function (chapter)
             mp.set_property("chapter", chapter - 1)
@@ -233,7 +252,7 @@ mp.add_key_binding(nil, "select-edition", function ()
     local edition_list = mp.get_property_native("edition-list")
 
     if edition_list == nil or #edition_list < 2 then
-        show_warning("无可用版本")
+        show_warning(t("No editions available"))
         return
     end
 
@@ -245,8 +264,9 @@ mp.add_key_binding(nil, "select-edition", function ()
     end
 
     input.select({
-        prompt = "选择版本:",
+        prompt = t("Select edition:"),
         items = editions,
+
         default_item = default_item > -1 and default_item + 1,
         submit = function (edition)
             mp.set_property("edition", edition - 1)
@@ -258,9 +278,10 @@ mp.add_key_binding(nil, "select-subtitle-line", function ()
     local sub = mp.get_property_native("current-tracks/sub")
 
     if sub == nil then
-        show_warning("未加载字幕")
+        show_warning(t("No subtitles loaded"))
         return
     end
+
 
     if sub.external and sub["external-filename"]:find("^edl://") then
         sub["external-filename"] = sub["external-filename"]:match('https?://.*')
@@ -279,12 +300,13 @@ mp.add_key_binding(nil, "select-subtitle-line", function ()
     })
 
     if r.error_string == "init" then
-        show_error("提取字幕失败：未找到 ffmpeg")
+        show_error(t("Failed to extract subtitles: ffmpeg not found"))
         return
     elseif r.status ~= 0 then
-        show_error("提取字幕失败")
+        show_error(t("Failed to extract subtitles"))
         return
     end
+
 
     local sub_lines = {}
     local sub_times = {}
@@ -366,8 +388,9 @@ mp.add_key_binding(nil, "select-subtitle-line", function ()
     end
 
     input.select({
-        prompt = "选择字幕行以跳转:",
+        prompt = t("Select subtitle line to jump:"),
         items = sub_lines,
+
         default_item = default_item,
         submit = function (index)
             -- Add an offset to seek to the correct line while paused without a
@@ -391,7 +414,7 @@ mp.add_key_binding(nil, "select-audio-device", function ()
     local default_item
 
     if #devices == 0 then
-        show_warning("无可用音频设备")
+        show_warning(t("No audio devices available"))
         return
     end
 
@@ -404,8 +427,9 @@ mp.add_key_binding(nil, "select-audio-device", function ()
     end
 
     input.select({
-        prompt = "选择音频输出设备:",
+        prompt = t("Select audio output device:"),
         items = items,
+
         default_item = default_item,
         submit = function (id)
             mp.set_property("audio-device", devices[id].name)
@@ -443,9 +467,10 @@ mp.add_key_binding(nil, "select-watch-history", function ()
     if not history_file then
         show_warning(mp.get_property_native("save-watch-history")
                      and error_message
-                     or "启用 --save-watch-history 以跳转到最近播放的文件")
+                     or t("Enable --save-watch-history to jump to recently played files"))
         return
     end
+
 
     local all_entries = {}
     local line_num = 1
@@ -473,11 +498,12 @@ mp.add_key_binding(nil, "select-watch-history", function ()
         end
     end
 
-    items[#items+1] = "清空历史记录"
+    items[#items+1] = t("History cleared")
 
     input.select({
-        prompt = "选择文件:",
+        prompt = t("Select file:"),
         items = items,
+
         submit = function (i)
             if entries[i] then
                 mp.commandv("loadfile", entries[i].path)
@@ -498,9 +524,10 @@ mp.add_key_binding(nil, "select-watch-later", function ()
     local watch_later_dir = mp.get_property("current-watch-later-dir")
 
     if not watch_later_dir then
-        show_warning("未找到稍后观看文件")
+        show_warning(t("Watch later file not found"))
         return
     end
+
 
     local watch_later_files = {}
 
@@ -509,9 +536,10 @@ mp.add_key_binding(nil, "select-watch-later", function ()
     end
 
     if #watch_later_files == 0 then
-        show_warning("未找到稍后观看文件")
+        show_warning(t("Watch later file not found"))
         return
     end
+
 
     local files = {}
     for _, watch_later_file in pairs(watch_later_files) do
@@ -527,8 +555,9 @@ mp.add_key_binding(nil, "select-watch-later", function ()
 
     if #files == 0 then
         show_warning(mp.get_property_native("write-filename-in-watch-later-config")
-            and "未找到稍后观看文件"
+            and t("Watch later file not found")
             or "启用 --write-filename-in-watch-later-config 以选择最近的文件")
+
         return
     end
 
@@ -542,8 +571,9 @@ mp.add_key_binding(nil, "select-watch-later", function ()
     end
 
     input.select({
-        prompt = "选择文件:",
+        prompt = t("Select file:"),
         items = items,
+
         submit = function (i)
             mp.commandv("loadfile", files[i][1])
         end,
@@ -574,8 +604,9 @@ mp.add_key_binding(nil, "select-binding", function ()
     table.sort(items)
 
     input.select({
-        prompt = "选择按键绑定:",
+        prompt = t("Select key binding:"),
         items = items,
+
         submit = function (i)
             mp.command(items[i]:gsub("^.- ", ""))
         end,
@@ -618,8 +649,9 @@ mp.add_key_binding(nil, "show-properties", function ()
     table.sort(properties)
 
     input.select({
-        prompt = "查看属性:",
+        prompt = t("View properties:"),
         items = properties,
+
         submit = function (i)
             if mp.get_property_native("vo-configured") then
                 mp.commandv("expand-properties", "show-text",
@@ -649,9 +681,10 @@ end
 
 local function edit_config_file(filename)
     if not mp.get_property_bool("config") then
-        show_warning("不支持在 --no-config 模式下编辑配置文件")
+        show_warning(t("Editing config file not supported in --no-config mode"))
         return
     end
+
 
     local path = mp.find_config_file(filename)
 

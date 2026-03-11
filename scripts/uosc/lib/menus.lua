@@ -675,7 +675,7 @@ do
 								if last_item then last_item.separator = true end
 							elseif command ~= 'ignore' then
 								local item = {
-									title = title_part,
+									title = t(title_part),
 									hint = not is_dummy and keybind_to_human(key) or nil,
 									value = command,
 								}
