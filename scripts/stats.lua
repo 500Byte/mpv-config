@@ -326,11 +326,12 @@ local function sorted_keys(t, comp_fn)
 end
 
 local function scroll_hint(search)
-    local hint = format("(提示: 滚动用 %s/%s ", o.key_scroll_up, o.key_scroll_down)
+    local hint = format("(Hint: use %s/%s for scrolling ", o.key_scroll_up, o.key_scroll_down)
     if search then
-        hint = hint .. " 搜索用 " .. o.key_search
+        hint = hint .. " and " .. o.key_search .. " for searching"
     end
-    hint = hint .. "键)"
+    hint = hint .. ")"
+
     if not o.use_ass then return " " .. hint end
     return format(" {\\fs%s}%s{\\fs%s}", font_size * 0.66, hint, font_size)
 end
@@ -384,8 +385,9 @@ local function append_perfdata(header, s, dedicated_page)
     local h = dedicated_page and header or s
     h[#h+1] = format("%s%s%s%s%s%s%s%s",
                      dedicated_page and "" or o.nl, dedicated_page and "" or o.indent,
-                     bold("帧时间:"), o.prefix_sep, font_small,
-                     "(上一/平均/最高 μs)", font_normal,
+                     bold("Frame timings:"), o.prefix_sep, font_small,
+                     "(Last/Average/Peak μs)", font_normal,
+
                      dedicated_page and scroll_hint() or "")
 
     for _,frame in ipairs(sorted_keys(vo_p)) do  -- ensure fixed display order
@@ -595,10 +597,11 @@ local function append_display_sync(s)
                         {prefix="显示同步:" .. o.prefix_sep .. " - / ", prefix_sep=""})
     end
 
-    append_property(s, "mistimed-frame-count", {prefix="错时帧:", nl="",
+    append_property(s, "mistimed-frame-count", {prefix="Mistimed frames:", nl="",
                                                 indent=o.prefix_sep .. o.prefix_sep})
-    append_property(s, "vo-delayed-frame-count", {prefix="延迟帧:", nl="",
+    append_property(s, "vo-delayed-frame-count", {prefix="Delayed frames:", nl="",
                                                   indent=o.prefix_sep .. o.prefix_sep})
+
 
     -- As we need to plot some graphs we print jitter and ratio on their own lines
     if not display_timer.oneshot and (o.plot_vsync_ratio or o.plot_vsync_jitter) and o.use_ass then
@@ -612,16 +615,18 @@ local function append_display_sync(s)
             jitter_graph = generate_graph(vsjitter_buf, vsjitter_buf.pos,
                                           vsjitter_buf.len, vsjitter_buf.max, nil, 0.8, 1)
         end
-        append_property(s, "vsync-ratio", {prefix="垂直同步比率:",
+        append_property(s, "vsync-ratio", {prefix="Vsync ratio:",
                                            suffix=o.prefix_sep .. ratio_graph})
-        append_property(s, "vsync-jitter", {prefix="垂直同步偏差:",
+        append_property(s, "vsync-jitter", {prefix="Vsync jitter:",
                                             suffix=o.prefix_sep .. jitter_graph})
+
     else
         -- Since no graph is needed we can print ratio/jitter on the same line and save some space
-        local vr = append_property(s, "vsync-ratio", {prefix="垂直同步比率:"})
-        append_property(s, "vsync-jitter", {prefix="垂直同步偏差:",
+        local vr = append_property(s, "vsync-ratio", {prefix="Vsync ratio:"})
+        append_property(s, "vsync-jitter", {prefix="Vsync jitter:",
                             nl=vr and "" or o.nl,
                             indent=vr and o.prefix_sep .. o.prefix_sep})
+
     end
 end
 
@@ -673,11 +678,13 @@ end
 
 
 local function add_file(s, print_cache, print_tags)
-    append(s, "", {prefix="文件:", nl="", indent=""})
+    append(s, "", {prefix="File:", nl="", indent=""})
+
     append_property(s, "filename", {prefix_sep="", nl="", indent=""})
     if mp.get_property_osd("filename") ~= mp.get_property_osd("media-title") then
-        append_property(s, "media-title", {prefix="标题:"})
+        append_property(s, "media-title", {prefix="Title:"})
     end
+
 
     if print_tags then
         local tags = mp.get_property_native("display-tags")
@@ -687,18 +694,19 @@ local function add_file(s, print_cache, print_tags)
             if tag ~= "Title" and tags_displayed < o.file_tag_max_count
                and value and value:len() < o.file_tag_max_length then
                 if tag == "Artist" then
-                    tag = "艺术家"
+                    tag = "Artist"
                 elseif tag == "Album" then
-                    tag = "专辑"
+                    tag = "Album"
                 elseif tag == "Album_Artist" then
-                    tag = "专辑艺术家"
+                    tag = "Album Artist"
                 elseif tag == "Date" then
-                    tag = "日期"
+                    tag = "Date"
                 elseif tag == "Genre" then
-                    tag = "流派"
+                    tag = "Genre"
                 elseif tag == "Track" then
-                    tag = "曲目"
+                    tag = "Track"
                 end
+
                 append(s, value, {prefix=string.gsub(tag, "_", " ") .. ":"})
                 tags_displayed = tags_displayed + 1
             end
@@ -710,7 +718,8 @@ local function add_file(s, print_cache, print_tags)
     local ed_cond = (edition and editions > 1)
     if ed_cond then
         append_property(s, "edition-list/" .. tostring(edition) .. "/title",
-                       {prefix="版本:"})
+                       {prefix="Edition:"})
+
         append_property(s, "edition-list/count",
                         {prefix="(" .. tostring(edition + 1) .. "/", suffix=")", nl="",
                          indent=" ", prefix_sep=" ", no_prefix_markup=true})
@@ -718,17 +727,19 @@ local function add_file(s, print_cache, print_tags)
 
     local ch_index = mp.get_property_number("chapter")
     if ch_index and ch_index >= 0 then
-        append_property(s, "chapter-list/" .. tostring(ch_index) .. "/title", {prefix="章节:",
+        append_property(s, "chapter-list/" .. tostring(ch_index) .. "/title", {prefix="Chapter:",
                         nl=ed_cond and "" or o.nl})
+
         append_property(s, "chapter-list/count",
                         {prefix="(" .. tostring(ch_index + 1) .. " /", suffix=")", nl="",
                          indent=" ", prefix_sep=" ", no_prefix_markup=true})
     end
 
-    local fs = append_property(s, "file-size", {prefix="文件体积:"})
-    append_property(s, "file-format", {prefix="格式/协议:",
+    local fs = append_property(s, "file-size", {prefix="File size:"})
+    append_property(s, "file-format", {prefix="Format/Protocol:",
                                        nl=fs and "" or o.nl,
                                        indent=fs and o.prefix_sep .. o.prefix_sep})
+
 
     if not print_cache then
         return
@@ -742,7 +753,8 @@ local function add_file(s, print_cache, print_tags)
     end
     local demuxer_secs = mp.get_property_number("demuxer-cache-duration", 0)
     if demuxer_cache + demuxer_secs > 0 then
-        append(s, utils.format_bytes_humanized(demuxer_cache), {prefix="总缓存:"})
+        append(s, utils.format_bytes_humanized(demuxer_cache), {prefix="Total cache:"})
+
         append(s, format("%.1f", demuxer_secs), {prefix="(", suffix=" sec)", nl="",
                no_prefix_markup=true, prefix_sep="", indent=o.prefix_sep})
     end
@@ -1485,12 +1497,12 @@ cache_recorder_timer:kill()
 -- Current page and <page key>:<page function> mapping
 curr_page = o.key_page_1
 pages = {
-    [o.key_page_1] = { idx = 1, f = default_stats, desc = "通用信息" },
-    [o.key_page_2] = { idx = 2, f = vo_stats, desc = "扩展帧计时", scroll = true },
-    [o.key_page_3] = { idx = 3, f = cache_stats, desc = "输入缓存统计" },
-    [o.key_page_4] = { idx = 4, f = keybinding_info, desc = "激活的按键绑定", scroll = true },
-    [o.key_page_5] = { idx = 5, f = track_info, desc = "选定轨道信息", scroll = true },
-    [o.key_page_0] = { idx = 0, f = perf_stats, desc = "内部性能信息", scroll = true },
+    [o.key_page_1] = { idx = 1, f = default_stats, desc = "General information" },
+    [o.key_page_2] = { idx = 2, f = vo_stats, desc = "Extended frame timings", scroll = true },
+    [o.key_page_3] = { idx = 3, f = cache_stats, desc = "Input cache statistics" },
+    [o.key_page_4] = { idx = 4, f = keybinding_info, desc = "Active key bindings", scroll = true },
+    [o.key_page_5] = { idx = 5, f = track_info, desc = "Selected track info", scroll = true },
+    [o.key_page_0] = { idx = 0, f = perf_stats, desc = "Internal performance info", scroll = true },
 }
 
 

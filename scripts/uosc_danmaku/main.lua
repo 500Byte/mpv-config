@@ -97,12 +97,15 @@ end
 
 function show_loaded(init)
     if DANMAKU.anime and DANMAKU.episode then
-        show_message("匹配内容：" .. DANMAKU.anime .. "-" .. DANMAKU.episode .. "\\N弹幕加载成功，共计" .. #COMMENTS .. "条弹幕", 3)
+        show_message("Matched content: " .. DANMAKU.anime .. "-" .. DANMAKU.episode .. "\\NDanmaku loaded successfully, total: " .. #COMMENTS, 3)
+
         if init then
-            msg.info(DANMAKU.anime .. "-" .. DANMAKU.episode .. " 弹幕加载成功，共计" .. #COMMENTS .. "条弹幕")
+            msg.info(DANMAKU.anime .. "-" .. DANMAKU.episode .. " Danmaku loaded successfully, total: " .. #COMMENTS)
+
         end
     else
-        show_message("弹幕加载成功，共计" .. #COMMENTS .. "条弹幕", 3)
+        show_message("Danmaku loaded successfully, total: " .. #COMMENTS, 3)
+
     end
 end
 
@@ -282,7 +285,8 @@ local function set_danmaku_delay(dly, time)
         render()
     end
 
-    show_message('设置弹幕延迟: ' .. string.format("%.1f", DELAY + 1e-10) .. ' s')
+    show_message('Set danmaku delay: ' .. string.format("%.1f", DELAY + 1e-10) .. ' s')
+
     mp.set_property_native(DELAY_PROPERTY, DELAY)
 end
 
@@ -309,8 +313,9 @@ local function clear_source()
 
     load_danmaku(false)
 
-    show_message("已重置当前视频所有弹幕源更改", 3)
-    msg.verbose("已重置当前视频所有弹幕源更改")
+    show_message("Reset all danmaku source changes for current video", 3)
+    msg.verbose("Reset all danmaku source changes for current video")
+
 end
 
 function write_history(episodeid)
@@ -504,11 +509,12 @@ local function collect_danmaku_sources()
 
     for _, source in pairs(DANMAKU.sources) do
         if not source.blocked and source.fname then
-            if not file_exists(source.fname) then
-                show_message("未找到弹幕文件", 3)
-                msg.info("未找到弹幕文件")
+        if not file_exists(source.fname) then
+                show_message("Danmaku file not found", 3)
+                msg.info("Danmaku file not found")
                 return
             end
+
             table.insert(danmaku_input, source.fname)
 
             if source.delay_segments and #source.delay_segments > 0 then
@@ -524,9 +530,10 @@ end
 function save_danmaku(not_forced)
     local danmaku_input, delays = collect_danmaku_sources()
     if #danmaku_input == 0 then
-        show_message("弹幕内容为空，无法保存", 3)
-        msg.verbose("弹幕内容为空，无法保存")
+        show_message("Danmaku content is empty, cannot save", 3)
+        msg.verbose("Danmaku content is empty, cannot save")
         COMMENTS = {}
+
         return
     end
 
@@ -537,13 +544,15 @@ function save_danmaku(not_forced)
     -- 排除网络播放场景
     if not path or is_protocol(path) or (not file_exists(danmaku_out)
     and not is_writable(danmaku_out)) then
-        show_message("此弹幕文件不支持保存至本地")
-        msg.warn("此弹幕文件不支持保存至本地")
+        show_message("This danmaku file does not support local saving")
+        msg.warn("This danmaku file does not support local saving")
+
     else
         if not_forced and file_exists(danmaku_out) then
-            show_message("已存在同名弹幕文件：" .. danmaku_out)
-            msg.info("已存在同名弹幕文件：" .. danmaku_out)
+            show_message("Danmaku file with the same name already exists: " .. danmaku_out)
+            msg.info("Danmaku file with the same name already exists: " .. danmaku_out)
             return
+
         else
             convert_danmaku_to_xml(danmaku_input, danmaku_out, delays)
         end
@@ -558,9 +567,10 @@ function load_danmaku(from_menu, no_osd)
     local danmaku_input, delays = collect_danmaku_sources()
     -- 如果没有弹幕文件，退出加载
     if #danmaku_input == 0 then
-        show_message("该集弹幕内容为空，结束加载", 3)
-        msg.verbose("该集弹幕内容为空，结束加载")
+        show_message("Danmaku content is empty, loading skipped", 3)
+        msg.verbose("Danmaku content is empty, loading skipped")
         COMMENTS = {}
+
         return
     end
 
@@ -624,10 +634,11 @@ function load_danmaku_for_bilibili(path)
         call_cmd_async(arg, function(error)
             async_running = false
             if error then
-                show_message("HTTP 请求失败，打开控制台查看详情", 5)
+                show_message("HTTP request failed, check console for details", 5)
                 msg.error(error)
                 return
             end
+
             if file_exists(danmaku_xml) then
                 save_danmaku_downloaded(path, danmaku_xml)
                 load_danmaku(true)
@@ -677,10 +688,11 @@ function load_danmaku_for_bahamut(path)
     call_cmd_async(arg, function(error)
         async_running = false
         if error then
-            show_message("HTTP 请求失败，打开控制台查看详情", 5)
+            show_message("HTTP request failed, check console for details", 5)
             msg.error(error)
             return
         end
+
         if not file_exists(danmaku_json) then
             url = "https://ani.gamer.com.tw/animeVideo.php?sn=" .. sn
             ENABLED = true
@@ -787,9 +799,10 @@ function auto_load_danmaku(path, dir, filename, number)
                 end
                 if playing_number ~= nil then
                     local x = playing_number - history_number --获取集数差值
-                    DANMAKU.episode = episode_number and string.format("第%s话", episode_number + x) or history_dir.episodeTitle
-                    show_message("自动加载上次匹配的弹幕", 3)
-                    msg.verbose("自动加载上次匹配的弹幕")
+                    DANMAKU.episode = episode_number and string.format("Episode %s", episode_number + x) or history_dir.episodeTitle
+                    show_message("Automatically loaded last matched danmaku", 3)
+                    msg.verbose("Automatically loaded last matched danmaku")
+
                     if history_id then
                         local tmp_id = tostring(x + history_id)
                         set_episode_id(tmp_id)
@@ -817,9 +830,10 @@ function init(path)
     local video = mp.get_property_native("current-tracks/video")
     local duration = mp.get_property_number("duration", 0)
     if not video or video["image"] or video["albumart"] or duration < 60 then
-        msg.info("不支持的播放内容（非视频）")
+        msg.info("Unsupported playback content (non-video)")
         return
     end
+
     if is_protocol(path) then
         load_danmaku_for_url(path)
     end
@@ -880,7 +894,8 @@ mp.register_event("file-loaded", function()
     end
 end)
 
--------------- 键位绑定 --------------
+-------------- Keybindings --------------
+
 mp.add_key_binding(options.open_search_danmaku_menu_key, "open_search_danmaku_menu", function()
     mp.commandv("script-message", "open_search_danmaku_menu")
 end)
@@ -894,9 +909,10 @@ mp.register_script_message("danmaku-delay", function(...)
     local dly = tonumber(delay_str)
     local time = time_str and tonumber(time_str)
     if type(dly) ~= "number" then
-        show_message("参数错误：缺少有效的延迟秒数", 3)
+        show_message("Parameter error: missing valid delay seconds", 3)
         return
     end
+
     set_danmaku_delay(dly, time)
 end)
 
@@ -906,7 +922,7 @@ mp.register_script_message("show_danmaku_keyboard", function()
         mp.commandv("script-message-to", "uosc", "set", "show_danmaku", "on")
         set_danmaku_visibility(true)
         if COMMENTS == nil then
-            show_message("加载弹幕初始化...", 3)
+            show_message("Danmaku initialization...", 3)
             local path = mp.get_property("path")
             init(path)
         else
@@ -914,8 +930,9 @@ mp.register_script_message("show_danmaku_keyboard", function()
             show_danmaku_func()
         end
     else
-        show_message("关闭弹幕", 2)
+        show_message("Disable danmaku", 2)
         mp.commandv("script-message-to", "uosc", "set", "show_danmaku", "off")
+
         set_danmaku_visibility(false)
         hide_danmaku_func()
     end
