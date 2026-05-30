@@ -91,7 +91,7 @@ local cleanup, on_toggle
 local s = {}
 
 -- labels
-local label_prefix = "动态裁剪"
+local label_prefix = "Dynamic Crop"
 local labels = {
     crop = string.format("%s-crop", label_prefix), cropdetect = string.format("%s-cropdetect", label_prefix)
 }
@@ -712,7 +712,7 @@ function on_toggle(auto)
             mp.commandv("vf", EVENT, string.format("@%s", labels.cropdetect))
         end
         seek(EVENT)
-        if not auto then mp.osd_message(string.format("%s: 已禁用, 保留裁剪", label_prefix), 3) end
+        if not auto then mp.osd_message(string.format("%s: Disabled, keeping crop", label_prefix), 3) end
     elseif s.toggled == DISABLE_WITH_CROP then
         s.toggled = DISABLE
         if filter_state(labels.cropdetect, "enabled", false) then
@@ -722,7 +722,7 @@ function on_toggle(auto)
                 mp.commandv("vf", EVENT, string.format("@%s", labels.crop))
             end
         end
-        if not auto then mp.osd_message(string.format("%s: 已撤销裁剪", label_prefix), 3) end
+        if not auto then mp.osd_message(string.format("%s: Crop removed", label_prefix), 3) end
     else -- s.toggled == DISABLE
         s.toggled = ENABLE
         if filter_state(labels.cropdetect, "enabled", false) then
@@ -734,7 +734,7 @@ function on_toggle(auto)
             mp.commandv("vf", EVENT, string.format("@%s", labels.crop))
         end
         resume(EVENT)
-        if not auto then mp.osd_message(string.format("%s: 已启用", label_prefix), 3) end
+        if not auto then mp.osd_message(string.format("%s: Enabled", label_prefix), 3) end
     end
 end
 
